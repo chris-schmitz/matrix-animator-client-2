@@ -1,19 +1,13 @@
-import Grid from "./Grid";
 import {useState} from "react";
+import Grid from "./Grid";
 
-export default function WorkArea() {
-    // * right now we're hard coding to 8 by 8 b/c that's the size
-    // * of all of my physical matrices at the moment, but eventually
-    // * I'll build bigger ones so I'll add the dynamic sizing later
-    const height = 8
-    const width = 8
+export default function WorkArea({animationFrame, handleAnimationFrameUpdate}) {
     const [activeColor, setActiveColor] = useState("#FF00FF")
-    const [gridColors, setGridColors] = useState(Array(height * width).fill("#FFFFFF"))
 
     function handlePixelClick(rowIndex, columnIndex) {
-        const colors = gridColors.slice()
-        colors[rowIndex * width + columnIndex] = activeColor
-        setGridColors(colors)
+        const colors = animationFrame.gridColors.slice()
+        colors[rowIndex * animationFrame.width + columnIndex] = activeColor
+        handleAnimationFrameUpdate(animationFrame.id, colors)
     }
 
     function handleSetActiveColor(event) {
@@ -21,15 +15,16 @@ export default function WorkArea() {
     }
 
     return (
-        <div className="work-area">
+        <div data-testid="workarea" className="work-area">
             <Grid
-                height={height}
-                width={width}
-                gridColors={gridColors}
+                height={animationFrame.height}
+                width={animationFrame.width}
+                gridColors={animationFrame.gridColors}
                 handlePixelClick={handlePixelClick}
             />
             <div>
                 <input
+                    data-testid="color-picker"
                     type="color"
                     value={activeColor}
                     onChange={handleSetActiveColor}

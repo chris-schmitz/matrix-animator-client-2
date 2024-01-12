@@ -7,7 +7,7 @@ export default function Pixel({rowIndex, columnIndex, handlePixelClick, color, p
         className="pixel"
         style={{backgroundColor: color}}
         onMouseOver={paintOnMouseOver}
-        onClick={() => handlePixelClick(rowIndex, columnIndex)}
+        onMouseDown={() => handlePixelClick(rowIndex, columnIndex)}
     >
     </div>
 }
