@@ -1,6 +1,33 @@
 import Pixel from "./Pixel";
 import {useState} from "react";
 
+export default function Grid({height, width, gridColors, handlePixelClick, tinyGrid = false}) {
+
+    const [paintPixel, setPaintPixel] = useState(false)
+
+    function createPixelComponent(rowIndex, columnIndex, color) {
+        return <Pixel
+            rowIndex={rowIndex}
+            columnIndex={columnIndex}
+            key={columnIndex}
+            color={color}
+            handlePixelClick={handlePixelClick}
+            paintPixels={paintPixel}
+        ></Pixel>
+    }
+
+
+    return (
+        <div
+            className={`grid ${tinyGrid ? "tiny" : ""}`}
+            data-testid="grid"
+            onMouseDown={() => setPaintPixel(true)}
+            onMouseUp={() => setPaintPixel(false)}
+        >
+            {gridBuilder.buildGrid(height, width, createPixelComponent, gridColors)}
+        </div>
+    );
+}
 
 // TODO: ponder a bit more
 // * I can't decide if I like this pulled out to a class or fit into
@@ -35,29 +62,3 @@ class GridBuilder {
 
 const gridBuilder = new GridBuilder()
 
-export default function Grid({height, width, gridColors, handlePixelClick}) {
-
-    const [paintPixel, setPaintPixel] = useState(false)
-
-    function createPixelComponent(rowIndex, columnIndex, color) {
-        return <Pixel
-            rowIndex={rowIndex}
-            columnIndex={columnIndex}
-            key={columnIndex}
-            color={color}
-            handlePixelClick={handlePixelClick}
-            paintPixels={paintPixel}
-        ></Pixel>
-    }
-
-
-    return (
-        <div
-            className="grid"
-            onMouseDown={() => setPaintPixel(true)}
-            onMouseUp={() => setPaintPixel(false)}
-        >
-            {gridBuilder.buildGrid(height, width, createPixelComponent, gridColors)}
-        </div>
-    );
-}
