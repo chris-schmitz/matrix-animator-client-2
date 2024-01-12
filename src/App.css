@@ -35,4 +35,5 @@ html, body {
     height: 50px;
     width: 50px;
     border: 0.5px solid darkcyan;
+    user-select: none;
 }

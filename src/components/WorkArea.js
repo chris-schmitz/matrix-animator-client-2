@@ -8,13 +8,16 @@ export default function WorkArea() {
     const height = 8
     const width = 8
     const [activeColor, setActiveColor] = useState("#FF00FF")
-    const [gridColors, setGridColors] = useState(Array(height * width).fill(0xFFCCFF))
+    const [gridColors, setGridColors] = useState(Array(height * width).fill("#FFFFFF"))
 
-    function handlePixelClick(rowIndex, columnIndex, color) {
+    function handlePixelClick(rowIndex, columnIndex) {
         const colors = gridColors.slice()
         colors[rowIndex * width + columnIndex] = activeColor
         setGridColors(colors)
-        console.log({rowIndex, columnIndex, color})
+    }
+
+    function handleSetActiveColor(event) {
+        setActiveColor(event.target.value)
     }
 
     return (
@@ -26,7 +29,11 @@ export default function WorkArea() {
                 handlePixelClick={handlePixelClick}
             />
             <div>
-                <input type="color" value={activeColor} onChange={(event) => setActiveColor(event.target.value)}/>
+                <input
+                    type="color"
+                    value={activeColor}
+                    onChange={handleSetActiveColor}
+                />
             </div>
         </div>
     );
