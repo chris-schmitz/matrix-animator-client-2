@@ -10,11 +10,11 @@ function App() {
     // * right now we're hard coding to 8 by 8 b/c that's the size
     // * of all of my physical matrices at the moment, but eventually
     // * I'll build bigger ones so I'll add the dynamic sizing later
-    const [frames, setFrames]
-        = useState([
-        new AnimationFrame(0, 8, 8, Array(8 * 8).fill("#FFFFFF")),
-        // new AnimationFrame(1, 8, 8, Array(8 * 8).fill("#FFFFFF")),
-    ])
+    function makeNewFrame(id) {
+        return new AnimationFrame(id, 8, 8, Array(8 * 8).fill("#FFFFFF"))
+    }
+
+    const [frames, setFrames] = useState([makeNewFrame(0)])
     const [activeFrame, setActiveFrame] = useState(0)
 
     function handleAnimationFrameUpdate(frameId, gridColors) {
@@ -28,10 +28,18 @@ function App() {
         setActiveFrame(frameId)
     }
 
+    function handleNewFrameRequest() {
+        const newFrames = frames.slice()
+        const previousId = newFrames[newFrames.length - 1].id
+        newFrames.push(makeNewFrame(previousId + 1))
+        setFrames(newFrames)
+    }
+
     return (
         <div id="app-root" className="App">
             <WorkArea animationFrame={frames[activeFrame]} handleAnimationFrameUpdate={handleAnimationFrameUpdate}/>
-            <Timeline frames={frames} handleTimelineGridSelection={handleTimelineGridSelection}/>
+            <Timeline frames={frames} handleTimelineGridSelection={handleTimelineGridSelection}
+                      handleNewFrameRequest={handleNewFrameRequest}/>
         </div>
     );
 }

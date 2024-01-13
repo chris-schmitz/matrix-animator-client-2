@@ -1,4 +1,4 @@
-import {fireEvent, render, screen} from '@testing-library/react'
+import {fireEvent, getByTestId, render, screen} from '@testing-library/react'
 import Timeline from "../components/Timeline";
 import {AnimationFrame} from "../domain/AnimationFrame";
 
@@ -14,16 +14,27 @@ describe("Timeline", () => {
     })
 
     it("can send the selected frame id when grid is clicked", () => {
-        const handler = jest.fn()
+        const gridSelectionHandler = jest.fn()
         const frames = [
             new AnimationFrame(0, 1, 1, []),
             new AnimationFrame(1, 1, 1, [])
         ]
 
-        const {getAllByTestId} = render(<Timeline frames={frames} handleTimelineGridSelection={handler}/>)
+        const {getAllByTestId} = render(<Timeline frames={frames} handleTimelineGridSelection={gridSelectionHandler}/>)
 
         const gridList = getAllByTestId("grid")
         fireEvent.click(gridList[1])
-        expect(handler).toBeCalledWith(1)
+        expect(gridSelectionHandler).toBeCalledWith(1)
+    })
+
+    it("can trigger the creation of a new animation frame", () => {
+        const newFrameHandler = jest.fn()
+        const frames = [new AnimationFrame(0, 1, 1, [])]
+
+        const {getByTestId} = render(<Timeline frames={frames} handleTimelineGridSelection={jest.fn()}
+                                               handleNewFrameRequest={newFrameHandler}/>)
+
+        fireEvent.click(getByTestId("new-frame-button"))
+        expect(newFrameHandler).toBeCalled()
     })
 })
