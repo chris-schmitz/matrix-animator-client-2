@@ -5,7 +5,8 @@ export default function WorkArea({
                                      animationFrame,
                                      handleAnimationFrameUpdate,
                                      handleNewFrameRequest,
-                                     handleDeleteFrameRequest
+                                     handleDeleteFrameRequest,
+                                     handleDuplicateFrameRequest
                                  }) {
     const [activeColor, setActiveColor] = useState("#FF00FF")
 
@@ -66,6 +67,13 @@ export default function WorkArea({
                     className="new-frame-button"
                 >
                     +
+                </button>
+                <button
+                    data-testid="duplicate-frame-button"
+                    onClick={() => handleDuplicateFrameRequest(animationFrame.id)}
+                    className="duplicate-frame-button"
+                >
+                    ++
                 </button>
                 <button
                     data-testid="delete-frame-button"

@@ -10,10 +10,10 @@ export default function Timeline({frames, handleTimelineGridSelection}) {
 }
 
 function renderFrames(frames, handleTimelineGridSelection) {
-    return frames.map(frame => {
+    return frames.map((frame, index) => {
         return <div
             key={frame.id}
-            onClick={() => handleTimelineGridSelection(frame.id)}
+            onClick={() => handleTimelineGridSelection(index)}
         >
             <Grid
                 height={frame.height}

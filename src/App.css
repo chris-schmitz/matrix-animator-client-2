@@ -93,19 +93,22 @@ html, body {
 .frame-actions {
     position: absolute;
     right: 10px;
+    /*top: 0;*/
+    /*bottom: 0;*/
     /*background: forestgreen;*/
     display: flex;
     flex-direction: column;
-    justify-content: space-around;
-    height: 150px;
+    justify-content: center;
+    /*height: 150px;*/
 }
 
 .frame-actions button {
-    height: 50px;
-    width: 50px;
+    height: 60px;
+    width: 60px;
     font-size: 40px;
     text-align: center;
     background: lightcyan;
     border: 1px solid darkcyan;
     color: darkcyan;
+    margin: 5px 0 5px 0;
 }
