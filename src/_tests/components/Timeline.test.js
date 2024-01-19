@@ -1,6 +1,6 @@
 import {fireEvent, getByTestId, render, screen} from '@testing-library/react'
-import Timeline from "../components/Timeline";
-import {AnimationFrame} from "../domain/AnimationFrame";
+import Timeline from "../../components/Timeline";
+import {AnimationFrame} from "../../domain/AnimationFrame";
 
 describe("Timeline", () => {
     it("can render an animation frame", () => {

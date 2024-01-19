@@ -1,6 +1,6 @@
 import {render} from '@testing-library/react'
 
-import Pixel from '../components/Pixel'
+import Pixel from '../../components/Pixel'
 
 describe("Pixel", () => {
     test("it renders", () => {

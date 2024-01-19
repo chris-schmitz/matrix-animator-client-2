@@ -1,7 +1,7 @@
 import {fireEvent, render, screen} from "@testing-library/react";
-import WorkArea from "../components/WorkArea";
+import WorkArea from "../../components/WorkArea";
 
-import {AnimationFrame} from "../domain/AnimationFrame";
+import {AnimationFrame} from "../../domain/AnimationFrame";
 
 
 describe("WorkArea", () => {
