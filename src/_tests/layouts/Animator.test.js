@@ -3,12 +3,12 @@ import {fireEvent, render, screen, waitFor} from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 
 
+//  TODO: move these helpers out to a test utility module
 function setPaletteColor(color, palettePickerNumber) {
     const palette = screen.getAllByTestId("color-picker")[palettePickerNumber]
     fireEvent.change(palette, {target: {value: color}})
 }
 
-//  TODO: move out to a test utility module
 function clickPixel(gridIndex) {
     const pixel = screen.getAllByTestId("pixel")[gridIndex]
     userEvent.click(pixel)
