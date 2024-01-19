@@ -1,6 +1,5 @@
 import Animator from "../../layouts/Animator";
 import {fireEvent, render, screen, waitFor} from "@testing-library/react";
-import userEvent from "@testing-library/user-event";
 
 
 //  TODO: move these helpers out to a test utility module
@@ -9,9 +8,15 @@ function setPaletteColor(color, palettePickerNumber) {
     fireEvent.change(palette, {target: {value: color}})
 }
 
+function setActivePalettePicker(pickerIndex) {
+    const pickerActivator = screen.getAllByTestId("color-picker-activator")[pickerIndex]
+    fireEvent.click(pickerActivator)
+}
+
 function clickPixel(gridIndex) {
     const pixel = screen.getAllByTestId("pixel")[gridIndex]
-    userEvent.click(pixel)
+    fireEvent.mouseDown(pixel)
+    fireEvent.mouseUp(pixel)
 }
 
 function expectPixelToHaveColor(gridIndex, expectedColor) {
@@ -22,11 +27,9 @@ function expectPixelToHaveColor(gridIndex, expectedColor) {
 
 describe("Animator", () => {
     test("can set an active color in the first palette and use it to color pixels", async () => {
-        const targetColor = "#FF00FF"
-
+        const targetColor = "#000000"
         render(<Animator/>)
-        setPaletteColor(targetColor, 1)
-        // setActivePalettePicker(1)
+        setPaletteColor(targetColor, 0)
 
         clickPixel(0)
 
@@ -35,4 +38,17 @@ describe("Animator", () => {
         })
     })
 
+    test("can use different colors in the palette color pickers", async () => {
+        const targetColor = "#CF10A3"
+
+        render(<Animator/>)
+        setPaletteColor(targetColor, 2)
+        setActivePalettePicker(2)
+
+        clickPixel(0)
+
+        await waitFor(() => {
+            expectPixelToHaveColor(0, targetColor)
+        })
+    })
 })

@@ -8,16 +8,24 @@ export default function WorkArea({
                                      handleDeleteFrameRequest,
                                      handleDuplicateFrameRequest
                                  }) {
-    const [activeColor, setActiveColor] = useState("#FF00FF")
+    const [pickers, setPickers] = useState({activeIndex: 0, color: ['#FF00FF', '#00ff00', '#0385ff']})
 
     function handlePixelClick(rowIndex, columnIndex) {
         const colors = animationFrame.gridColors.slice()
-        colors[rowIndex * animationFrame.width + columnIndex] = activeColor
+        colors[rowIndex * animationFrame.width + columnIndex] = pickers.color[pickers.activeIndex]
         handleAnimationFrameUpdate(animationFrame.id, colors)
     }
 
-    function handleSetActiveColor(event) {
-        setActiveColor(event.target.value)
+    function storePickerColor(color, pickerIndex) {
+        const pickersUpdate = {...pickers}
+        pickersUpdate.color[pickerIndex] = color
+        setPickers(pickersUpdate)
+    }
+
+    function handleSetActiveColor(pickerIndex) {
+        const pickersUpdate = {...pickers}
+        pickersUpdate.activeIndex = pickerIndex
+        setPickers(pickersUpdate)
     }
 
     return (
@@ -35,28 +43,52 @@ export default function WorkArea({
                     <input
                         data-testid="color-picker"
                         type="color"
-                        value={activeColor}
-                        onChange={handleSetActiveColor}
+                        value={pickers.color[0]}
+                        onChange={(event) => {
+                            storePickerColor(event.target.value, 0)
+                        }}
                     />
-                    <input type="radio"/>
+                    <input
+                        name="pickerActivator"
+                        type="radio"
+                        data-testid="color-picker-activator"
+                        checked={pickers.activeIndex === 0}
+                        onChange={() => handleSetActiveColor(0)}
+                    />
                 </div>
                 <div className="palette-button-group">
                     <input
                         data-testid="color-picker"
                         type="color"
-                        value={activeColor}
-                        onChange={handleSetActiveColor}
+                        value={pickers.color[1]}
+                        onChange={(event) => {
+                            storePickerColor(event.target.value, 1)
+                        }}
                     />
-                    <input type="radio"/>
+                    <input
+                        name="pickerActivator"
+                        type="radio"
+                        data-testid="color-picker-activator"
+                        checked={pickers.activeIndex === 1}
+                        onChange={() => handleSetActiveColor(1)}
+                    />
                 </div>
                 <div className="palette-button-group">
                     <input
                         data-testid="color-picker"
                         type="color"
-                        value={activeColor}
-                        onChange={handleSetActiveColor}
+                        value={pickers.color[2]}
+                        onChange={(event) => {
+                            storePickerColor(event.target.value, 2)
+                        }}
                     />
-                    <input type="radio"/>
+                    <input
+                        name="pickerActivator"
+                        type="radio"
+                        data-testid="color-picker-activator"
+                        checked={pickers.activeIndex === 2}
+                        onChange={() => handleSetActiveColor(2)}
+                    />
                 </div>
             </div>
 
