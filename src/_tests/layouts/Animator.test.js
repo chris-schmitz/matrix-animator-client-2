@@ -1,25 +1,38 @@
 import Animator from "../../layouts/Animator";
-import {render, screen} from "@testing-library/react";
+import {fireEvent, render, screen, waitFor} from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
+
+
+function setPaletteColor(color, palettePickerNumber) {
+    const palette = screen.getAllByTestId("color-picker")[palettePickerNumber]
+    fireEvent.change(palette, {target: {value: color}})
+}
+
+//  TODO: move out to a test utility module
+function clickPixel(gridIndex) {
+    const pixel = screen.getAllByTestId("pixel")[gridIndex]
+    userEvent.click(pixel)
+}
+
+function expectPixelToHaveColor(gridIndex, expectedColor) {
+    const pixelElement = screen.getAllByTestId("pixel")[gridIndex]
+    expect(pixelElement).toHaveStyle({backgroundColor: expectedColor})
+}
+
 
 describe("Animator", () => {
-    // ? What is th flow I want to test?
-    // * think of this less at a "cover this function" level and instead at a "this is what the user is doing" level
-    // * make helpers for repetitive processes (e.g. assertPixelIsColor(index, color))
-    // * https://github.com/testing-library/user-event
-
-
-    test("It can update a frame's grid colors", () => {
-        // ! for `handleAnimationFrameUpdate`
-        // ? At a high level and from a user's perspective, what are we trying to do/test?
-        // * when you click on a portion of the grid we expect the color for the given pixel
-        // * to be updated
-        // ? the thing is, while the state and the functions are at this level, everything
-        // ? happens in and across multiple sub components
+    test("can set an active color in the first palette and use it to color pixels", async () => {
+        const targetColor = "#FF00FF"
 
         render(<Animator/>)
-        // ? The grid being rendered is from a child component, should we be doing that??
-        const initialGridState = screen.getByTestId("grid")
+        setPaletteColor(targetColor, 1)
+        // setActivePalettePicker(1)
 
+        clickPixel(0)
 
+        await waitFor(() => {
+            expectPixelToHaveColor(0, targetColor)
+        })
     })
+
 })

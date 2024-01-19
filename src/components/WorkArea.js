@@ -30,7 +30,7 @@ export default function WorkArea({
                     handlePixelClick={handlePixelClick}
                 />
             </div>
-            <div className="color-palette">
+            <div className="color-palette" data-testid="palette">
                 <div className="palette-button-group">
                     <input
                         data-testid="color-picker"

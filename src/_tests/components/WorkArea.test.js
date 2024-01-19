@@ -1,4 +1,4 @@
-import {fireEvent, render, screen} from "@testing-library/react";
+import {render, screen} from "@testing-library/react";
 import WorkArea from "../../components/WorkArea";
 
 import {AnimationFrame} from "../../domain/AnimationFrame";
@@ -29,17 +29,4 @@ describe("WorkArea", () => {
         expect(element).toHaveAttribute("type", "color")
     })
 
-    test("when a color is selected, the WorkArea's active color is set", () => {
-        const targetColor = "#FF00FF"
-
-        const renderResult = render(<WorkArea/>)
-        const colorPickerElement = screen.getByTestId("color-picker")
-        const intialColor = colorPickerElement.value
-        fireEvent.change(colorPickerElement, {target: {value: targetColor}})
-
-        //     todo: figure out how this would be asserted
-        //     ? we're not displaying active color anywhere, it's just what will get used if a pixel is clicked. can we only
-        //     ? test this as an integration test where we then fire a click event on a pixel and assert against it??
-        //     ? do we mock out a pixel, click the mock, and assert it's called with the active color???
-    })
 })
