@@ -13,6 +13,7 @@ export default function Animator() {
 
     const [frames, setFrames] = useState([makeNewFrame(0)])
     const [activeFrameIndex, setActiveFrameIndex] = useState(0)
+    const [playPreview, setPlayPreview] = useState(false)
 
     function makeNewFrame() {
         return new AnimationFrame(serialNumbers.getSerialNumber(), 8, 8, Array(8 * 8).fill("#FFFFFF"))
@@ -68,6 +69,25 @@ export default function Animator() {
     }
 
 
+    function playAnimation(shouldPlay) {
+        setPlayPreview(shouldPlay)
+        if (shouldPlay) {
+            let nextFrame = activeFrameIndex
+            window.interval = setInterval(() => {
+                if (nextFrame >= frames.length - 1) {
+                    nextFrame = 0
+                } else {
+                    nextFrame = nextFrame + 1
+                }
+                console.log(nextFrame)
+                setActiveFrameIndex(nextFrame)
+            }, 300)
+        } else {
+            clearInterval(window.interval)
+        }
+    }
+
+
     return (
         <div data-testid="animator-layout" className="animator-layout">
             <WorkArea
@@ -80,6 +100,8 @@ export default function Animator() {
             <Timeline
                 frames={frames}
                 handleTimelineGridSelection={handleTimelineGridSelection}
+                playPreview={playPreview}
+                handleSetPlayPreview={playAnimation}
             />
         </div>
     );

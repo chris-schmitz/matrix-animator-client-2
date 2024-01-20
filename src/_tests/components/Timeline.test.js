@@ -26,4 +26,5 @@ describe("Timeline", () => {
         fireEvent.click(gridList[1])
         expect(gridSelectionHandler).toBeCalledWith(1)
     })
+
 })

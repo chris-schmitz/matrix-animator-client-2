@@ -112,3 +112,22 @@ html, body {
     color: darkcyan;
     margin: 5px 0 5px 0;
 }
+
+.play-pause-button {
+    height: 60px;
+    width: 60px;
+    font-size: 40px;
+    text-align: center;
+    background: lightcyan;
+    border: 1px solid darkcyan;
+    color: darkcyan;
+    margin: 5px 0 5px 0;
+}
+
+.play-pause-button.paused {
+    filter: drop-shadow(2px 2px 2px darkcyan);
+}
+
+.play-pause-button.playing {
+    border: 2px solid magenta;
+}

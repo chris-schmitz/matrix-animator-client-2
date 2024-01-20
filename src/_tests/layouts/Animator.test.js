@@ -1,5 +1,5 @@
 import Animator from "../../layouts/Animator";
-import {render} from "@testing-library/react";
+import {fireEvent, render, screen} from "@testing-library/react";
 import {clickPixel, expectPixelToHaveColor, setActivePalettePicker, setPaletteColor} from "../test_helpers/testHelpers";
 
 
@@ -25,5 +25,12 @@ describe("Animator", () => {
         await clickPixel(0)
 
         expectPixelToHaveColor(0, targetColor)
+    })
+
+    test("it can preview the animation", () => {
+        function clickAnimationPreviewButton() {
+            const buttonElement = screen.getAllByTestId("animation-preview-play-pause-button")
+            fireEvent.click(buttonElement)
+        }
     })
 })
