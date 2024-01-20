@@ -9,6 +9,7 @@ export default function WorkArea({
                                      handleDuplicateFrameRequest
                                  }) {
     const [pickers, setPickers] = useState({activeIndex: 0, color: ['#FF00FF', '#00ff00', '#0385ff']})
+    const [paintPixels, setPaintPixels] = useState(false)
 
     function handlePixelClick(rowIndex, columnIndex) {
         const colors = animationFrame.gridColors.slice()
@@ -28,13 +29,22 @@ export default function WorkArea({
         setPickers(pickersUpdate)
     }
 
+    function handleSetPaintPixels(canPaint) {
+        setPaintPixels(canPaint)
+    }
+
     return (
         <div data-testid="workarea" className="work-area">
-            <div className="grid-wrapper">
+            <div
+                className="grid-wrapper"
+                onMouseLeave={() => handleSetPaintPixels(false)}
+            >
                 <Grid
                     height={animationFrame.height}
                     width={animationFrame.width}
                     gridColors={animationFrame.gridColors}
+                    paintPixels={paintPixels}
+                    handleSetPaintPixels={handleSetPaintPixels}
                     handlePixelClick={handlePixelClick}
                 />
             </div>

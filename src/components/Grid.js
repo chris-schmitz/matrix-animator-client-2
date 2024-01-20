@@ -1,9 +1,15 @@
 import Pixel from "./Pixel";
-import {useState} from "react";
 
-export default function Grid({height, width, gridColors, handlePixelClick, tinyGrid = false}) {
+export default function Grid({
+                                 height,
+                                 width,
+                                 gridColors,
+                                 paintPixels,
+                                 handleSetPaintPixels,
+                                 handlePixelClick,
+                                 tinyGrid = false
+                             }) {
 
-    const [paintPixel, setPaintPixel] = useState(false)
 
     function createPixelComponent(rowIndex, columnIndex, color) {
         return <Pixel
@@ -12,7 +18,7 @@ export default function Grid({height, width, gridColors, handlePixelClick, tinyG
             key={columnIndex}
             color={color}
             handlePixelClick={handlePixelClick}
-            paintPixels={paintPixel}
+            paintPixels={paintPixels}
         ></Pixel>
     }
 
@@ -21,8 +27,8 @@ export default function Grid({height, width, gridColors, handlePixelClick, tinyG
         <div
             className={`grid ${tinyGrid ? "tiny" : ""}`}
             data-testid="grid"
-            onMouseDown={() => setPaintPixel(true)}
-            onMouseUp={() => setPaintPixel(false)}
+            onMouseDown={() => handleSetPaintPixels(true)}
+            onMouseUp={() => handleSetPaintPixels(false)}
         >
             {gridBuilder.buildGrid(height, width, createPixelComponent, gridColors)}
         </div>
