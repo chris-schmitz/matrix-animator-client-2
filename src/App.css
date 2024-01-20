@@ -1,24 +1,24 @@
 html, body {
     height: 100vh;
-    background: deeppink;
+    /*background: deeppink;*/
     margin: 0;
     padding: 0;
 }
 
 .App {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    background: white;
+    /*background: mediumpurple;*/
+}
+
+.animator-layout {
     height: 100vh;
     width: 100vw;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
 }
 
 .timeline {
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    right: 0;
+    /*background: orange;*/
     border-top: 1px solid darkcyan;
 
     display: flex;
@@ -28,26 +28,32 @@ html, body {
 }
 
 .work-area {
+    /*background: crimson;*/
+    flex: 1;
     display: flex;
     flex-direction: column;
     align-items: center;
-}
-
-.work-area input {
-    margin-top: 20px;
-    height: 50px;
-    width: 50px;
-    border: 1px solid darkcyan;
+    justify-content: center;
 }
 
 
-.grid {
+.grid-wrapper {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    /*background: pink;*/
 }
+
+.work-area .grid {
+    /*background: cornflowerblue;*/
+    margin: 10px;
+    justify-content: center;
+}
+
 
 .grid.tiny {
     filter: drop-shadow(5px 5px 5px darkcyan);
-    background: coral;
-
+    /*background: coral;*/
 }
 
 .grid.tiny .pixel {
@@ -61,4 +67,48 @@ html, body {
     width: 50px;
     border: 0.5px solid darkcyan;
     user-select: none;
+}
+
+.color-palette {
+    /*background: chocolate;*/
+    display: flex;
+    width: 400px;
+    justify-content: space-evenly;
+    /*flex: 1;*/
+    align-items: center;
+    height: 100px;
+}
+
+.palette-button-group {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.palette-button-group input[type=color] {
+    height: 50px;
+    width: 50px;
+}
+
+.frame-actions {
+    position: absolute;
+    right: 10px;
+    /*top: 0;*/
+    /*bottom: 0;*/
+    /*background: forestgreen;*/
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    /*height: 150px;*/
+}
+
+.frame-actions button {
+    height: 60px;
+    width: 60px;
+    font-size: 40px;
+    text-align: center;
+    background: lightcyan;
+    border: 1px solid darkcyan;
+    color: darkcyan;
+    margin: 5px 0 5px 0;
 }
