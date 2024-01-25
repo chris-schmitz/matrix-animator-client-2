@@ -14,6 +14,7 @@ export default function Animator() {
     const [frames, setFrames] = useState([makeNewFrame(0)])
     const [activeFrameIndex, setActiveFrameIndex] = useState(0)
     const [playPreview, setPlayPreview] = useState(false)
+    const [animationSpeed, setAnimationSpeed] = useState(300)
 
     function makeNewFrame() {
         return new AnimationFrame(serialNumbers.getSerialNumber(), 8, 8, Array(8 * 8).fill("#FFFFFF"))
@@ -69,10 +70,11 @@ export default function Animator() {
     }
 
 
-    function playAnimation(shouldPlay) {
-        setPlayPreview(shouldPlay)
-        if (shouldPlay) {
+    function playAnimation(play) {
+        const newSpeed = animationSpeed
+        if (play) {
             let nextFrame = activeFrameIndex
+            clearInterval(window.interval)
             window.interval = setInterval(() => {
                 if (nextFrame >= frames.length - 1) {
                     nextFrame = 0
@@ -81,10 +83,13 @@ export default function Animator() {
                 }
                 console.log(nextFrame)
                 setActiveFrameIndex(nextFrame)
-            }, 300)
+            }, newSpeed)
         } else {
             clearInterval(window.interval)
         }
+
+        setPlayPreview(play)
+        setAnimationSpeed(newSpeed)
     }
 
 
@@ -97,11 +102,23 @@ export default function Animator() {
                 handleDeleteFrameRequest={handleDeleteFrameRequest}
                 handleDuplicateFrameRequest={handleDuplicateFrameRequest}
             />
+            <label for="speed" className="speed-label">➠
+                <input name="speed" type="number" value={animationSpeed}
+                       onKeyDown={(event) => {
+                           if (event.key !== "Enter") return
+                           playAnimation(true)
+                       }
+                       }
+                       onChange={(event) => setAnimationSpeed(Number(event.target.value))}
+
+                />
+            </label>
             <Timeline
                 frames={frames}
                 handleTimelineGridSelection={handleTimelineGridSelection}
                 playPreview={playPreview}
                 handleSetPlayPreview={playAnimation}
+                activeFrameIndex={activeFrameIndex}
             />
         </div>
     );

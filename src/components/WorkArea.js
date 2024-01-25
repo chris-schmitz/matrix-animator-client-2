@@ -1,5 +1,6 @@
 import {useState} from "react";
 import Grid from "./Grid";
+import {addButtonPressedClass, removeButtonPressedClass} from "../utilities/mouseUtilities";
 
 export default function WorkArea({
                                      animationFrame,
@@ -8,7 +9,7 @@ export default function WorkArea({
                                      handleDeleteFrameRequest,
                                      handleDuplicateFrameRequest
                                  }) {
-    const [pickers, setPickers] = useState({activeIndex: 0, color: ['#FF00FF', '#00ff00', '#0385ff']})
+    const [pickers, setPickers] = useState({activeIndex: 0, color: ['#FF00FF', '#00ff00', '#FFFFFF']})
     const [paintPixels, setPaintPixels] = useState(false)
 
     function handlePixelClick(rowIndex, columnIndex) {
@@ -35,6 +36,38 @@ export default function WorkArea({
 
     return (
         <div data-testid="workarea" className="work-area">
+            <div className="frame-actions">
+                <button
+                    data-testid="new-frame-button"
+                    onClick={handleNewFrameRequest}
+                    onMouseDown={(event) => event.target.classList.add("pressed")}
+                    onMouseUp={(event) => event.target.classList.remove("pressed")}
+                    onMouseLeave={(event) => event.target.classList.remove("pressed")}
+                    className="new-frame-button"
+                >
+                    +
+                </button>
+                <button
+                    data-testid="duplicate-frame-button"
+                    onClick={() => handleDuplicateFrameRequest(animationFrame.id)}
+                    className="duplicate-frame-button"
+                    onMouseDown={(event) => event.target.classList.add("pressed")}
+                    onMouseUp={(event) => event.target.classList.remove("pressed")}
+                    onMouseLeave={(event) => event.target.classList.remove("pressed")}
+                >
+                    ++
+                </button>
+                <button
+                    data-testid="delete-frame-button"
+                    onClick={() => handleDeleteFrameRequest(animationFrame.id)}
+                    className="delete-frame-button"
+                    onMouseDown={addButtonPressedClass}
+                    onMouseUp={removeButtonPressedClass}
+                    onMouseLeave={removeButtonPressedClass}
+                >
+                    -
+                </button>
+            </div>
             <div
                 className="grid-wrapper"
                 onMouseLeave={() => handleSetPaintPixels(false)}
@@ -60,6 +93,7 @@ export default function WorkArea({
                     />
                     <input
                         name="pickerActivator"
+                        className="picker-activator"
                         type="radio"
                         data-testid="color-picker-activator"
                         checked={pickers.activeIndex === 0}
@@ -77,6 +111,7 @@ export default function WorkArea({
                     />
                     <input
                         name="pickerActivator"
+                        className="picker-activator"
                         type="radio"
                         data-testid="color-picker-activator"
                         checked={pickers.activeIndex === 1}
@@ -94,6 +129,7 @@ export default function WorkArea({
                     />
                     <input
                         name="pickerActivator"
+                        className="picker-activator"
                         type="radio"
                         data-testid="color-picker-activator"
                         checked={pickers.activeIndex === 2}
@@ -102,29 +138,6 @@ export default function WorkArea({
                 </div>
             </div>
 
-            <div className="frame-actions">
-                <button
-                    data-testid="new-frame-button"
-                    onClick={handleNewFrameRequest}
-                    className="new-frame-button"
-                >
-                    +
-                </button>
-                <button
-                    data-testid="duplicate-frame-button"
-                    onClick={() => handleDuplicateFrameRequest(animationFrame.id)}
-                    className="duplicate-frame-button"
-                >
-                    ++
-                </button>
-                <button
-                    data-testid="delete-frame-button"
-                    onClick={() => handleDeleteFrameRequest(animationFrame.id)}
-                    className="delete-frame-button"
-                >
-                    -
-                </button>
-            </div>
         </div>
     );
 }

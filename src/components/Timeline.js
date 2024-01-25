@@ -1,4 +1,5 @@
 import Grid from "./Grid";
+import {addButtonPressedClass, removeButtonPressedClass} from "../utilities/mouseUtilities";
 
 export default function Timeline({
                                      frames,
@@ -14,10 +15,15 @@ export default function Timeline({
                 data-testid="animation-preview-play-pause-button"
                 className={playPreview ? "play-pause-button playing" : "play-pause-button paused"}
                 onClick={() => handleSetPlayPreview(!playPreview)}
+                onMouseDown={addButtonPressedClass}
+                onMouseUp={removeButtonPressedClass}
+                onMouseLeave={removeButtonPressedClass}
             >
                 ⏯
             </button>
-            {renderFrames(frames, handleTimelineGridSelection, activeFrameIndex)}
+            <div class="timeline-frame-wrapper">
+                {renderFrames(frames, handleTimelineGridSelection, activeFrameIndex)}
+            </div>
         </div>
     )
 }

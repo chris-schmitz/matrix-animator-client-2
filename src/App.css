@@ -25,6 +25,18 @@ html, body {
     column-gap: 10px;
     align-items: center;
     padding: 10px;
+    overflow-y: auto;
+}
+
+
+.timeline-frame-wrapper {
+    display: flex;
+    overflow-x: scroll;
+}
+
+.timeline-frame-wrapper .grid {
+    margin-right: 10px;
+    width: 90px;
 }
 
 .work-area {
@@ -70,11 +82,9 @@ html, body {
 }
 
 .color-palette {
-    /*background: chocolate;*/
     display: flex;
     width: 400px;
     justify-content: space-evenly;
-    /*flex: 1;*/
     align-items: center;
     height: 100px;
 }
@@ -86,20 +96,20 @@ html, body {
 }
 
 .palette-button-group input[type=color] {
-    height: 50px;
-    width: 50px;
+    height: 40px;
+    width: 40px;
+}
+
+.active-frame {
+    border-bottom: 3px solid magenta;
+    padding-bottom: 8px;
+    /*drop-shadow: none;*/
+    /*border*/
 }
 
 .frame-actions {
-    position: absolute;
-    right: 10px;
-    /*top: 0;*/
-    /*bottom: 0;*/
-    /*background: forestgreen;*/
     display: flex;
-    flex-direction: column;
     justify-content: center;
-    /*height: 150px;*/
 }
 
 .frame-actions button {
@@ -110,7 +120,8 @@ html, body {
     background: lightcyan;
     border: 1px solid darkcyan;
     color: darkcyan;
-    margin: 5px 0 5px 0;
+    /*margin: 5px 0 5px 0;*/
+    margin: 10px;
 }
 
 .play-pause-button {
@@ -121,8 +132,9 @@ html, body {
     background: lightcyan;
     border: 1px solid darkcyan;
     color: darkcyan;
-    margin: 5px 0 5px 0;
+    margin: 5px 0 30px 0;
 }
+
 
 .play-pause-button.paused {
     filter: drop-shadow(2px 2px 2px darkcyan);
@@ -130,4 +142,29 @@ html, body {
 
 .play-pause-button.playing {
     border: 2px solid magenta;
+}
+
+.speed-label {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    /*margin: 10px;*/
+    font-size: 30px;
+    color: darkcyan;
+}
+
+.speed-label input {
+    margin-left: 5px;
+    width: 50px;
+}
+
+.picker-activator {
+    margin-top: 5px;
+    height: 25px;
+    width: 25px;
+}
+
+
+.pressed {
+    background: #014949 !important;
 }
