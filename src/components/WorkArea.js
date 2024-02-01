@@ -1,6 +1,8 @@
 import { useState } from "react"
 import Grid from "./Grid"
 import { addButtonPressedClass, removeButtonPressedClass } from "../utilities/mouseUtilities"
+import { saveAnimation } from "../utilities/apis"
+import { AnimationFrame, AnimationRequestPayload } from "../domain/AnimationFrame"
 
 export default function WorkArea({
     animationFrame,
@@ -89,8 +91,27 @@ export default function WorkArea({
         return buttons
     }
 
+    async function testSave() {
+        const frames = [
+            new AnimationFrame(0, 8, 8, [1])
+        ]
+        const animation = new AnimationRequestPayload(
+            "test",
+            1,
+            frames[0].height,
+            frames[0].width,
+            1,
+            frames,
+            1
+        )
+
+        const actualId = await saveAnimation(animation)
+        console.log(actualId)
+    }
+
     return (
         <div data-testid="workarea" className="work-area">
+            <button onClick={testSave}>testsave</button>
             <div className="frame-actions">
                 {renderFrameActionButtons()}
             </div>

@@ -1,5 +1,5 @@
-import {getAnimation, saveAnimation} from "../../utilities/apis"
-import {AnimationFrame, AnimationRequestPayload} from "../../domain/AnimationFrame"
+import { getAnimation, saveAnimation } from "../../utilities/apis"
+import { AnimationFrame, AnimationRequestPayload } from "../../domain/AnimationFrame"
 
 function mockFetchSuccessfulResponse(content) {
     global.fetch = jest.fn(() => {
@@ -43,9 +43,9 @@ describe("animations api", () => {
     it("can get an animation by ID", async () => {
         const animationId = 123
         const expected = new AnimationRequestPayload("test animation", 3, 1, 1, 1, [new AnimationFrame(1, 1, 1, [0xFFFFFF])], animationId)
-        mockFetchSuccessfulResponse()
+        mockFetchSuccessfulResponse(expected)
 
-        const actual = getAnimation(animationId)
+        const actual = await getAnimation(animationId)
 
         expect(fetch).toHaveBeenCalledWith(
             `http://localhost:8080/rest/animations/${animationId}`,
@@ -58,4 +58,6 @@ describe("animations api", () => {
         )
         expect(actual).toBe(expected)
     })
+
+    it("can get a list of animations", async () => { })
 })
