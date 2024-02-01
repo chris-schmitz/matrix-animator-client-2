@@ -22,7 +22,11 @@ export async function getAnimation(id) {
 }
 
 export async function getAnimationList() {
-
+  const response = await makeApiRequest({
+    uri: api.baseUrl,
+    method: httpMethods.GET
+  })
+  return response.json()
 }
 
 export async function saveAnimation(animationRequestPayload) {

@@ -1,4 +1,4 @@
-import { getAnimation, saveAnimation } from "../../utilities/apis"
+import { getAnimation, getAnimationList, saveAnimation } from "../../utilities/apis"
 import { AnimationFrame, AnimationRequestPayload } from "../../domain/AnimationFrame"
 
 function mockFetchSuccessfulResponse(content) {
@@ -59,5 +59,25 @@ describe("animations api", () => {
         expect(actual).toBe(expected)
     })
 
-    it("can get a list of animations", async () => { })
+    it("can get a list of animations", async () => {
+        const expected = [
+            new AnimationRequestPayload("test animation 1", 3, 1, 1, 1, [new AnimationFrame(1, 1, 1, [0xFFFFFF])], 1),
+            new AnimationRequestPayload("test animation 2", 3, 1, 1, 1, [new AnimationFrame(1, 1, 1, [0xFFFFFF])], 2),
+            new AnimationRequestPayload("test animation 3", 3, 1, 1, 1, [new AnimationFrame(1, 1, 1, [0xFFFFFF])], 3),
+        ]
+        mockFetchSuccessfulResponse(expected)
+
+        const actual = await getAnimationList()
+
+        expect(fetch).toHaveBeenCalledWith(
+            `http://localhost:8080/rest/animations`,
+            {
+                method: "GET",
+                headers: {
+                    "Content-Type": "application/json"
+                }
+            }
+        )
+        expect(actual).toBe(expected)
+    })
 })
