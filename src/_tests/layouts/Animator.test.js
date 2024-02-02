@@ -51,10 +51,11 @@ describe("Animator", () => {
         await clickPixel(1)
         await clickNewFrameButton()
         await clickPixel(2)
-        let gridColors1, gridColors2, gridColors3
-        gridColors1 = gridColors2 = gridColors3 = Array(64).fill("#000000")
+        const gridColors1 = Array(64).fill("#000000")
         gridColors1[0] = "#FF00FF"
+        const gridColors2 = Array(64).fill("#000000")
         gridColors2[1] = "#FF00FF"
+        const gridColors3 = Array(64).fill("#000000")
         gridColors3[2] = "#FF00FF"
         const expectedAnimation = new AnimationRequestPayload(
             "",
