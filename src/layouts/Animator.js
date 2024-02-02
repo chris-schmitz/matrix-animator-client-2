@@ -1,8 +1,9 @@
-import {AnimationFrame} from "../domain/AnimationFrame";
+import {AnimationFrame, AnimationRequestPayload} from "../domain/AnimationFrame";
 import {useState} from "react";
 import WorkArea from "../components/WorkArea";
 import Timeline from "../components/Timeline";
 import {serialNumbers} from "../utilities/ListSerialNumberGenerator";
+import {saveAnimation} from "../utilities/apis";
 
 
 export default function Animator() {
@@ -11,13 +12,15 @@ export default function Animator() {
     // * of all of my physical matrices at the moment, but eventually
     // * I'll build bigger ones so I'll add the dynamic sizing later
 
+    // TODO: we need to come back and replace frames with AnimationPayload and pull frames out of it
     const [frames, setFrames] = useState([makeNewFrame(0)])
+    const [animationTitle, setAnimationTitle] = useState("...")
     const [activeFrameIndex, setActiveFrameIndex] = useState(0)
     const [playPreview, setPlayPreview] = useState(false)
     const [animationSpeed, setAnimationSpeed] = useState(300)
 
     function makeNewFrame() {
-        return new AnimationFrame(serialNumbers.getSerialNumber(), 8, 8, Array(8 * 8).fill("#FFFFFF"))
+        return new AnimationFrame(serialNumbers.getSerialNumber(), 8, 8, Array(8 * 8).fill("#000000"))
     }
 
     function handleAnimationFrameUpdate(frameId, gridColors) {
@@ -92,17 +95,38 @@ export default function Animator() {
         setAnimationSpeed(newSpeed)
     }
 
+    function handleSetAnimationTitle(event) {
+        setAnimationTitle(event.target.value)
+    }
+
+    async function handleSaveAnimation() {
+        const payload = new AnimationRequestPayload(
+            "",
+            0,
+            frames[0].height,
+            frames[0].width,
+            animationSpeed,
+            frames
+        )
+        const savedId = await saveAnimation(payload)
+        const animation = {...payload, id: savedId}
+        console.log(animation)
+    }
+
 
     return (
         <div data-testid="animator-layout" className="animator-layout">
+            <button data-testid="save-animation-button" onClick={handleSaveAnimation}>Save</button>
             <WorkArea
                 animationFrame={frames[activeFrameIndex]}
                 handleAnimationFrameUpdate={handleAnimationFrameUpdate}
                 handleNewFrameRequest={handleNewFrameRequest}
                 handleDeleteFrameRequest={handleDeleteFrameRequest}
                 handleDuplicateFrameRequest={handleDuplicateFrameRequest}
+                animationTitle={animationTitle}
+                handleSetAnimationTitle={handleSetAnimationTitle}
             />
-            <label for="speed" className="speed-label">➠
+            <label htmlFor="speed" className="speed-label">➠
                 <input name="speed" type="number" value={animationSpeed}
                        onKeyDown={(event) => {
                            if (event.key !== "Enter") return

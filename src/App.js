@@ -5,11 +5,16 @@ import {useState} from "react";
 
 function App() {
     const [activeLayout, setActiveLayout] = useState(Layouts.ANIMATOR)
+    const [animation, setAnimation] = useState()
+
+    function setActiveLayoutBasedOnUrl() {
+        const urlPath = window.location.pathname
+    }
 
     function getActiveLayout() {
         switch (activeLayout) {
             case Layouts.ANIMATOR:
-                return <Animator/>
+                return <Animator animation={animation} setAnimation={setAnimation}/>
             case Layouts.ANIMATION_LIST:
                 return <h1>Animation List</h1>
 

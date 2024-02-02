@@ -22,7 +22,27 @@ export function clickPixel(gridIndex) {
     fireEvent.mouseUp(pixel)
 }
 
+export function clickNewFrameButton() {
+    const button = screen.getByTestId("new-frame-button")
+    fireEvent.click(button)
+}
+
+export function clickSaveAnimationButton() {
+    const button = screen.getByTestId("save-animation-button")
+    fireEvent.click(button)
+}
+
+
 export function expectPixelToHaveColor(gridIndex, expectedColor) {
     const pixelElement = screen.getAllByTestId("pixel")[gridIndex]
     expect(pixelElement).toHaveStyle({backgroundColor: expectedColor})
+}
+
+export function mockFetchSuccessfulResponse(content) {
+    global.fetch = jest.fn(() => {
+        return Promise.resolve({
+            json: () => Promise.resolve(content),
+            text: () => Promise.resolve(content)
+        })
+    })
 }

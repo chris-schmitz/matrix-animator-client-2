@@ -1,6 +1,15 @@
 import Animator from "../../layouts/Animator";
 import {fireEvent, render, screen} from "@testing-library/react";
-import {clickPixel, expectPixelToHaveColor, setActivePalettePicker, setPaletteColor} from "../test_helpers/testHelpers";
+import {
+    clickNewFrameButton,
+    clickPixel,
+    clickSaveAnimationButton,
+    expectPixelToHaveColor,
+    mockFetchSuccessfulResponse,
+    setActivePalettePicker,
+    setPaletteColor
+} from "../test_helpers/testHelpers";
+import {AnimationFrame, AnimationRequestPayload} from "../../domain/AnimationFrame";
 
 
 describe("Animator", () => {
@@ -32,5 +41,44 @@ describe("Animator", () => {
             const buttonElement = screen.getAllByTestId("animation-preview-play-pause-button")
             fireEvent.click(buttonElement)
         }
+    })
+
+    test("Can save an animation", async () => {
+        mockFetchSuccessfulResponse(123)
+        render(<Animator/>)
+        await clickPixel(0)
+        await clickNewFrameButton()
+        await clickPixel(1)
+        await clickNewFrameButton()
+        await clickPixel(2)
+        let gridColors1, gridColors2, gridColors3
+        gridColors1 = gridColors2 = gridColors3 = Array(64).fill("#000000")
+        gridColors1[0] = "#FF00FF"
+        gridColors2[1] = "#FF00FF"
+        gridColors3[2] = "#FF00FF"
+        const expectedAnimation = new AnimationRequestPayload(
+            "",
+            0,
+            8,
+            8,
+            300,
+            [
+                new AnimationFrame(0, 8, 8, gridColors1),
+                new AnimationFrame(0, 8, 8, gridColors2),
+                new AnimationFrame(0, 8, 8, gridColors3),
+            ]
+        )
+
+        await clickSaveAnimationButton()
+
+        expect(fetch).toHaveBeenCalledWith(
+            "http://localhost:8080/rest/animations",
+            {
+                "method": "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(expectedAnimation)
+            })
     })
 })

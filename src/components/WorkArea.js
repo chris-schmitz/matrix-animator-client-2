@@ -1,17 +1,17 @@
-import { useState } from "react"
+import {useState} from "react"
 import Grid from "./Grid"
-import { addButtonPressedClass, removeButtonPressedClass } from "../utilities/mouseUtilities"
-import { saveAnimation } from "../utilities/apis"
-import { AnimationFrame, AnimationRequestPayload } from "../domain/AnimationFrame"
+import {addButtonPressedClass, removeButtonPressedClass} from "../utilities/mouseUtilities"
 
 export default function WorkArea({
-    animationFrame,
-    handleAnimationFrameUpdate,
-    handleNewFrameRequest,
-    handleDeleteFrameRequest,
-    handleDuplicateFrameRequest
-}) {
-    const [pickers, setPickers] = useState({ activeIndex: 0, color: ['#FF00FF', '#00ff00', '#FFFFFF'] })
+                                     animationFrame,
+                                     handleAnimationFrameUpdate,
+                                     handleNewFrameRequest,
+                                     handleDeleteFrameRequest,
+                                     handleDuplicateFrameRequest,
+                                     animationTitle,
+                                     handleSetAnimationTitle
+                                 }) {
+    const [pickers, setPickers] = useState({activeIndex: 0, color: ['#FF00FF', '#00ff00', '#FFFFFF']})
     const [paintPixels, setPaintPixels] = useState(false)
 
     function handlePixelClick(rowIndex, columnIndex) {
@@ -21,13 +21,13 @@ export default function WorkArea({
     }
 
     function storePickerColor(color, pickerIndex) {
-        const pickersUpdate = { ...pickers }
+        const pickersUpdate = {...pickers}
         pickersUpdate.color[pickerIndex] = color
         setPickers(pickersUpdate)
     }
 
     function handleSetActiveColor(pickerIndex) {
-        const pickersUpdate = { ...pickers }
+        const pickersUpdate = {...pickers}
         pickersUpdate.activeIndex = pickerIndex
         setPickers(pickersUpdate)
     }
@@ -40,10 +40,9 @@ export default function WorkArea({
         // * hmmmmm what if we make the number of color pickers configureable ... 
         const totalPaletteButtons = 3
         const paletteButtonGroups = []
-        for (let i = 0; i < totalPaletteButtons; i++)
-        {
+        for (let i = 0; i < totalPaletteButtons; i++) {
             paletteButtonGroups.push(
-                <div className="palette-button-group">
+                <div key={i} className="palette-button-group">
                     <input
                         data-testid="color-picker"
                         type="color"
@@ -68,15 +67,19 @@ export default function WorkArea({
 
     function renderFrameActionButtons() {
         const buttonData = [
-            { name: "new-frame-button", clickHandler: handleNewFrameRequest, symbol: "+" },
-            { name: "duplicate-frame-button", clickHandler: () => handleDuplicateFrameRequest(animationFrame.id), symbol: "++" },
-            { name: "delete-frame-button", clickHandler: () => handleDeleteFrameRequest(animationFrame.id), symbol: "-" },
+            {name: "new-frame-button", clickHandler: handleNewFrameRequest, symbol: "+"},
+            {
+                name: "duplicate-frame-button",
+                clickHandler: () => handleDuplicateFrameRequest(animationFrame.id),
+                symbol: "++"
+            },
+            {name: "delete-frame-button", clickHandler: () => handleDeleteFrameRequest(animationFrame.id), symbol: "-"},
         ]
         const buttons = []
-        for (let i = 0; i < 3; i++)
-        {
+        for (let i = 0; i < 3; i++) {
             buttons.push(
                 <button
+                    key={i}
                     data-testid={buttonData[i].name}
                     className={buttonData[i].name}
                     onClick={buttonData[i].clickHandler}
@@ -91,31 +94,15 @@ export default function WorkArea({
         return buttons
     }
 
-    async function testSave() {
-        const frames = [
-            new AnimationFrame(0, 8, 8, [1])
-        ]
-        const animation = new AnimationRequestPayload(
-            "test",
-            1,
-            frames[0].height,
-            frames[0].width,
-            1,
-            frames,
-            1
-        )
-
-        const actualId = await saveAnimation(animation)
-        console.log(actualId)
-    }
-
     return (
         <div data-testid="workarea" className="work-area">
-            <button onClick={testSave}>testsave</button>
             <div className="frame-actions">
                 {renderFrameActionButtons()}
             </div>
-            <div className="grid-wrapper" onMouseLeave={() => handleSetPaintPixels(false)} >
+            <label htmlFor="animationTitle">AnimationTitle</label>
+            <input data-testid="animation-title" name="animationTitle" value={animationTitle}
+                   onChange={handleSetAnimationTitle}/>
+            <div className="grid-wrapper" onMouseLeave={() => handleSetPaintPixels(false)}>
                 <Grid
                     height={animationFrame.height}
                     width={animationFrame.width}

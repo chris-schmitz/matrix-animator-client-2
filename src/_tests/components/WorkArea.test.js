@@ -29,4 +29,5 @@ describe("WorkArea", () => {
         expect(element).toHaveAttribute("type", "color")
     })
 
+
 })

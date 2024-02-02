@@ -21,7 +21,7 @@ export default function Timeline({
             >
                 ⏯
             </button>
-            <div class="timeline-frame-wrapper">
+            <div className="timeline-frame-wrapper">
                 {renderFrames(frames, handleTimelineGridSelection, activeFrameIndex)}
             </div>
         </div>
@@ -32,7 +32,7 @@ function renderFrames(frames, handleTimelineGridSelection, activeFrameIndex) {
     return frames.map((frame, index) => {
         return <div
             key={frame.id}
-            className={activeFrameIndex === index ? "active-frame" : ""}
+            className={activeFrameIndex === index ? "active-frame grid-tiny-wrapper" : "grid-tiny-wrapper"}
             onClick={() => handleTimelineGridSelection(index)}
         >
             <Grid

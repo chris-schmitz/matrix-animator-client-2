@@ -1,14 +1,7 @@
-import { getAnimation, getAnimationList, saveAnimation } from "../../utilities/apis"
-import { AnimationFrame, AnimationRequestPayload } from "../../domain/AnimationFrame"
+import {getAnimation, getAnimationList, saveAnimation} from "../../utilities/apis"
+import {AnimationFrame, AnimationRequestPayload} from "../../domain/AnimationFrame"
+import {mockFetchSuccessfulResponse} from "../test_helpers/testHelpers";
 
-function mockFetchSuccessfulResponse(content) {
-    global.fetch = jest.fn(() => {
-        return Promise.resolve({
-            json: () => Promise.resolve(content),
-            text: () => Promise.resolve(content)
-        })
-    })
-}
 
 describe("animations api", () => {
     it("can save an animation", async () => {
