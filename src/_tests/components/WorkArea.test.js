@@ -23,10 +23,12 @@ describe("WorkArea", () => {
         render(<WorkArea animationFrame={frame} handleAnimationFrameUpdate={() => {
         }}/>)
 
-        const element = document.getElementsByTagName("input")[0]
+        const elements = screen.getAllByTestId("color-picker")
 
-        expect(element).toBeInTheDocument()
-        expect(element).toHaveAttribute("type", "color")
+        elements.forEach(element => {
+            expect(element).toBeInTheDocument()
+            expect(element).toHaveAttribute("type", "color")
+        })
     })
 
 

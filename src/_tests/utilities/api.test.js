@@ -8,7 +8,7 @@ describe("animations api", () => {
         const expectedId = 123
         mockFetchSuccessfulResponse(expectedId)
         const frames = [
-            new AnimationFrame(0, 8, 8, [1])
+            new AnimationFrame(0, 8, 8, ["#FFFFFF"])
         ]
         const animation = new AnimationRequestPayload(
             "test",
@@ -35,7 +35,14 @@ describe("animations api", () => {
 
     it("can get an animation by ID", async () => {
         const animationId = 123
-        const expected = new AnimationRequestPayload("test animation", 3, 1, 1, 1, [new AnimationFrame(1, 1, 1, [0xFFFFFF])], animationId)
+        const expected = new AnimationRequestPayload(
+            "test animation",
+            3,
+            1,
+            1,
+            1,
+            [new AnimationFrame(1, 1, 1, ["#FFFFFF"])],
+            animationId)
         mockFetchSuccessfulResponse(expected)
 
         const actual = await getAnimation(animationId)
@@ -54,9 +61,9 @@ describe("animations api", () => {
 
     it("can get a list of animations", async () => {
         const expected = [
-            new AnimationRequestPayload("test animation 1", 3, 1, 1, 1, [new AnimationFrame(1, 1, 1, [0xFFFFFF])], 1),
-            new AnimationRequestPayload("test animation 2", 3, 1, 1, 1, [new AnimationFrame(1, 1, 1, [0xFFFFFF])], 2),
-            new AnimationRequestPayload("test animation 3", 3, 1, 1, 1, [new AnimationFrame(1, 1, 1, [0xFFFFFF])], 3),
+            new AnimationRequestPayload("test animation 1", 3, 1, 1, 1, [new AnimationFrame(1, 1, 1, ["#FFFFFF"])], 1),
+            new AnimationRequestPayload("test animation 2", 3, 1, 1, 1, [new AnimationFrame(1, 1, 1, ["#FFFFFF"])], 2),
+            new AnimationRequestPayload("test animation 3", 3, 1, 1, 1, [new AnimationFrame(1, 1, 1, ["#FFFFFF"])], 3),
         ]
         mockFetchSuccessfulResponse(expected)
 

@@ -11,7 +11,7 @@ export default function WorkArea({
                                      animationTitle,
                                      handleSetAnimationTitle
                                  }) {
-    const [pickers, setPickers] = useState({activeIndex: 0, color: ['#FF00FF', '#00ff00', '#FFFFFF']})
+    const [pickers, setPickers] = useState({activeIndex: 0, color: ['#FF00FF', '#00ff00', '#000000']})
     const [paintPixels, setPaintPixels] = useState(false)
 
     function handlePixelClick(rowIndex, columnIndex) {

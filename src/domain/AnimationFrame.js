@@ -23,7 +23,12 @@ export class AnimationRequestPayload {
     // * it's most likely an API conversion b/c the front end is the part that's actually dependent 
     // * on the structure
     toApiPayload(animationFrames) {
-        return animationFrames.map((frame, i) => { return { positionInAnimation: i, pixels: frame.gridColors } })
+        return animationFrames
+            .map(frame => frame.gridColors)
+            .map(gridColors => gridColors.map(stringHex => parseInt(stringHex.slice(1), 16)))
+            .map((gridColors, i) => {
+                return {positionInAnimation: i, pixels: gridColors}
+            })
     }
 
 }
