@@ -1,22 +1,26 @@
 import Animator from "../../layouts/Animator";
-import {fireEvent, render, screen} from "@testing-library/react";
+import {fireEvent, render, screen, waitFor} from "@testing-library/react";
 import {
-    clickNewFrameButton,
+    buildAMatrixAnimationInstance,
     clickPixel,
     clickSaveAnimationButton,
     expectPixelToHaveColor,
     mockFetchSuccessfulResponse,
+    noop,
     setActivePalettePicker,
     setPaletteColor
 } from "../test_helpers/testHelpers";
-import {AnimationFrame, AnimationRequestPayload} from "../../domain/AnimationFrame";
+import {notificationDismissTypes} from "../../App";
 
+
+// TODO: add in a helper method to make a default animation instance and pop that into each of the tests
+// TODO: also consider refactoring the code to pull the frame height and width out of the AnimationFrame object and have the components refer to the MatrixAnimation height and width
 
 describe("Animator", () => {
 
     test("can set an active color in the first palette and use it to color pixels", async () => {
         const targetColor = "#000000"
-        render(<Animator/>)
+        render(<Animator animation={buildAMatrixAnimationInstance()} setAnimation={noop} setNotification={noop}/>)
         await setPaletteColor(targetColor, 0)
 
         await clickPixel(0)
@@ -27,7 +31,7 @@ describe("Animator", () => {
     test("can use different colors in the palette color pickers", async () => {
         const targetColor = "#CF10A3"
 
-        render(<Animator/>)
+        render(<Animator animation={buildAMatrixAnimationInstance()} setAnimation={noop} setNotification={noop}/>)
         await setPaletteColor(targetColor, 2)
         await setActivePalettePicker(2)
 
@@ -45,31 +49,9 @@ describe("Animator", () => {
 
     test("Can save an animation", async () => {
         mockFetchSuccessfulResponse(123)
-        render(<Animator/>)
-        await clickPixel(0)
-        await clickNewFrameButton()
-        await clickPixel(1)
-        await clickNewFrameButton()
-        await clickPixel(2)
-        const gridColors1 = Array(64).fill("#000000")
-        gridColors1[0] = "#FF00FF"
-        const gridColors2 = Array(64).fill("#000000")
-        gridColors2[1] = "#FF00FF"
-        const gridColors3 = Array(64).fill("#000000")
-        gridColors3[2] = "#FF00FF"
-        const expectedAnimation = new AnimationRequestPayload(
-            "",
-            0,
-            8,
-            8,
-            300,
-            [
-                new AnimationFrame(0, 8, 8, gridColors1),
-                new AnimationFrame(0, 8, 8, gridColors2),
-                new AnimationFrame(0, 8, 8, gridColors3),
-            ]
-        )
-
+        const animation = buildAMatrixAnimationInstance()
+        const notificationMock = jest.fn()
+        render(<Animator animation={animation} setAnimation={noop} setNotification={notificationMock}/>)
         await clickSaveAnimationButton()
 
         expect(fetch).toHaveBeenCalledWith(
@@ -79,7 +61,43 @@ describe("Animator", () => {
                 headers: {
                     "Content-Type": "application/json"
                 },
-                body: JSON.stringify(expectedAnimation)
+                body: JSON.stringify(animation.toApiPayload())
             })
+        await waitFor(() => {
+            expect(notificationMock).toHaveBeenCalledWith({
+                dismissType: notificationDismissTypes.AUTO_DISMISS,
+                message: "Animation Saved",
+                show: true
+            })
+        })
+    })
+
+    test("if an animation has an id, the update endpoint is called", async () => {
+        mockFetchSuccessfulResponse(123)
+        const animation = buildAMatrixAnimationInstance()
+        animation.id = 123
+        const notificationMock = jest.fn()
+        render(<Animator animation={animation} setAnimation={noop} setNotification={notificationMock}/>)
+
+        await clickSaveAnimationButton()
+
+        await clickSaveAnimationButton()
+
+        expect(fetch).toHaveBeenCalledWith(
+            "http://localhost:8080/rest/animations",
+            {
+                "method": "PUT",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(animation.toApiPayload())
+            })
+        await waitFor(() => {
+            expect(notificationMock).toHaveBeenCalledWith({
+                dismissType: notificationDismissTypes.AUTO_DISMISS,
+                message: "Animation Saved",
+                show: true
+            })
+        })
     })
 })

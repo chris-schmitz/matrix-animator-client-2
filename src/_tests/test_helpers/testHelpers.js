@@ -1,6 +1,8 @@
 //  TODO: move these helpers out to a test utility module
 import {fireEvent, screen} from "@testing-library/react";
 import {userEvent} from "@testing-library/user-event";
+import {MatrixAnimation} from "../../domain/MatrixAnimation";
+import {AnimationFrame} from "../../domain/AnimationFrame";
 
 const user = userEvent.setup()
 
@@ -45,4 +47,20 @@ export function mockFetchSuccessfulResponse(content) {
             text: () => Promise.resolve(content)
         })
     })
+}
+
+export function buildAMatrixAnimationInstance(title) {
+    return new MatrixAnimation(
+        title ? title : "some title",
+        0,
+        8,
+        8,
+        300,
+        [
+            new AnimationFrame(0, 8, 8, ["#FFFFFF"])
+        ]
+    )
+}
+
+export function noop() {
 }
