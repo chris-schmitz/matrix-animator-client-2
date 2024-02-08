@@ -4,7 +4,7 @@ import {AnimationFrame} from "../../domain/AnimationFrame";
 
 describe("Timeline", () => {
     it("can render an animation frame", () => {
-        const frames = [new AnimationFrame(0, 8, 8, Array(8 * 8).fill("#FFFFFF"))]
+        const frames = [new AnimationFrame(0, Array(8 * 8).fill("#FFFFFF"))]
 
         render(<Timeline frames={frames}/>)
 
@@ -16,8 +16,8 @@ describe("Timeline", () => {
     it("can send the selected frame id when grid is clicked", () => {
         const gridSelectionHandler = jest.fn()
         const frames = [
-            new AnimationFrame(0, 1, 1, []),
-            new AnimationFrame(1, 1, 1, [])
+            new AnimationFrame(0, []),
+            new AnimationFrame(1, [])
         ]
 
         const {getAllByTestId} = render(<Timeline frames={frames} handleTimelineGridSelection={gridSelectionHandler}/>)

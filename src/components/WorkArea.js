@@ -4,6 +4,8 @@ import {addButtonPressedClass, removeButtonPressedClass} from "../utilities/mous
 
 export default function WorkArea({
                                      animationFrame,
+                                     frameHeight,
+                                     frameWidth,
                                      handleAnimationFrameUpdate,
                                      handleNewFrameRequest,
                                      handleDeleteFrameRequest,
@@ -16,7 +18,7 @@ export default function WorkArea({
 
     function handlePixelClick(rowIndex, columnIndex) {
         const colors = animationFrame.gridColors.slice()
-        colors[rowIndex * animationFrame.width + columnIndex] = pickers.color[pickers.activeIndex]
+        colors[rowIndex * frameWidth + columnIndex] = pickers.color[pickers.activeIndex]
         handleAnimationFrameUpdate(animationFrame.id, colors)
     }
 
@@ -104,8 +106,8 @@ export default function WorkArea({
                    onChange={handleSetAnimationTitle}/>
             <div className="grid-wrapper" onMouseLeave={() => handleSetPaintPixels(false)}>
                 <Grid
-                    height={animationFrame.height}
-                    width={animationFrame.width}
+                    height={frameHeight}
+                    width={frameWidth}
                     gridColors={animationFrame.gridColors}
                     paintPixels={paintPixels}
                     handleSetPaintPixels={handleSetPaintPixels}

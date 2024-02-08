@@ -19,7 +19,7 @@ function App() {
             8,
             8,
             300,
-            [new AnimationFrame(serialNumbers.getSerialNumber(), 8, 8, Array(8 * 8).fill("#000000"))],
+            [new AnimationFrame(serialNumbers.getSerialNumber(), Array(8 * 8).fill("#000000"))],
             null))
     const [notification, setNotification] = useState({
         show: false,

@@ -19,7 +19,7 @@ export default function Animator({animation, setAnimation, setNotification}) {
     // * of all of my physical matrices at the moment, but eventually
     // * I'll build bigger ones so I'll add the dynamic sizing later
     function makeNewFrame() {
-        return new AnimationFrame(serialNumbers.getSerialNumber(), 8, 8, Array(8 * 8).fill("#000000"))
+        return new AnimationFrame(serialNumbers.getSerialNumber(), Array(8 * 8).fill("#000000"))
     }
 
     function handleAnimationFrameUpdate(frameId, gridColors) {
@@ -153,6 +153,8 @@ export default function Animator({animation, setAnimation, setNotification}) {
             </div>
             <WorkArea
                 animationFrame={animation.frames[activeFrameIndex]}
+                frameHeight={animation.height}
+                frameWidth={animation.width}
                 handleAnimationFrameUpdate={handleAnimationFrameUpdate}
                 handleNewFrameRequest={handleNewFrameRequest}
                 handleDeleteFrameRequest={handleDeleteFrameRequest}

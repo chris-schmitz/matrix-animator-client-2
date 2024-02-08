@@ -57,7 +57,7 @@ export function buildAMatrixAnimationInstance(title) {
         8,
         300,
         [
-            new AnimationFrame(0, 8, 8, ["#FFFFFF"])
+            new AnimationFrame(0, ["#FFFFFF"])
         ]
     )
 }
