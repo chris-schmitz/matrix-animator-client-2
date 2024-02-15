@@ -2,10 +2,12 @@ import Animator from "../../layouts/Animator";
 import {fireEvent, render, screen, waitFor} from "@testing-library/react";
 import {
     buildAMatrixAnimationInstance,
+    clickDeleteAnimationButton,
     clickPixel,
     clickSaveAnimationButton,
+    confirmationModalVisible,
     expectPixelToHaveColor,
-    mockFetchSuccessfulResponse,
+    mockFetchCall,
     noop,
     setActivePalettePicker,
     setPaletteColor
@@ -48,7 +50,7 @@ describe("Animator", () => {
     })
 
     test("Can save an animation", async () => {
-        mockFetchSuccessfulResponse(123)
+        mockFetchCall(123)
         const animation = buildAMatrixAnimationInstance()
         const notificationMock = jest.fn()
         render(<Animator animation={animation} setAnimation={noop} setNotification={notificationMock}/>)
@@ -72,8 +74,39 @@ describe("Animator", () => {
         })
     })
 
+
+    test("Can delete an animation", async () => {
+        mockFetchCall(123)
+        const animation = buildAMatrixAnimationInstance()
+        animation.id = 555
+        const notificationMock = jest.fn()
+        render(<Animator animation={animation} setAnimation={noop} setNotification={notificationMock}/>)
+        await clickPixel(0)
+        await clickDeleteAnimationButton()
+
+        await waitFor(async () => {
+            await confirmationModalVisible("Are you sure you want to delete this animation?")
+        })
+
+        expect(fetch).toHaveBeenCalledWith(
+            `http://localhost:8080/rest/animations/${animation.id}`,
+            {
+                "method": "DELETE",
+                headers: {
+                    "Content-Type": "application/json"
+                }
+            })
+        await waitFor(() => {
+            expect(notificationMock).toHaveBeenCalledWith({
+                dismissType: notificationDismissTypes.AUTO_DISMISS,
+                message: "Animation Deleted",
+                show: true
+            })
+        })
+    })
+
     test("if an animation has an id, the update endpoint is called", async () => {
-        mockFetchSuccessfulResponse(123)
+        mockFetchCall(123)
         const animation = buildAMatrixAnimationInstance()
         animation.id = 123
         const notificationMock = jest.fn()

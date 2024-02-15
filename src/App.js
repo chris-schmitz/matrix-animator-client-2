@@ -1,8 +1,6 @@
 import './App.css';
 import Animator from "./layouts/Animator";
 import {useState} from "react";
-import {AnimationFrame} from "./domain/AnimationFrame";
-import {serialNumbers} from "./utilities/ListSerialNumberGenerator";
 import {MatrixAnimation} from "./domain/MatrixAnimation";
 
 export const notificationDismissTypes = {
@@ -12,15 +10,7 @@ export const notificationDismissTypes = {
 
 function App() {
     const [activeLayout, setActiveLayout] = useState(Layouts.ANIMATOR)
-    const [animation, setAnimation] = useState(
-        new MatrixAnimation(
-            "...",
-            null,
-            8,
-            8,
-            300,
-            [new AnimationFrame(serialNumbers.getSerialNumber(), Array(8 * 8).fill("#000000"))],
-            null))
+    const [animation, setAnimation] = useState(MatrixAnimation.newBlankAnimation())
     const [notification, setNotification] = useState({
         show: false,
         message: null,

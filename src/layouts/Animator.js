@@ -3,17 +3,19 @@ import {useState} from "react";
 import WorkArea from "../components/WorkArea";
 import Timeline from "../components/Timeline";
 import {serialNumbers} from "../utilities/ListSerialNumberGenerator";
-import {saveAnimation, updateAnimation} from "../utilities/apis";
+import {deleteAnimation, saveAnimation, updateAnimation} from "../utilities/apis";
 import {addButtonPressedClass, removeButtonPressedClass} from "../utilities/mouseUtilities";
 import {notificationDismissTypes} from "../App";
 import {MatrixAnimation} from "../domain/MatrixAnimation";
+import Modal from "../_tests/components/Modal";
+import modalButtonTypes from "../domain/ModalButtonTypes";
 
 
 export default function Animator({animation, setAnimation, setNotification}) {
 
     const [activeFrameIndex, setActiveFrameIndex] = useState(0)
     const [playPreview, setPlayPreview] = useState(false)
-    const [animationSpeed, setAnimationSpeed] = useState(300)
+    const [showDeleteModal, setShowDeleteModal] = useState(false)
 
     // * right now we're hard coding to 8 by 8 b/c that's the size
     // * of all of my physical matrices at the moment, but eventually
@@ -110,6 +112,36 @@ export default function Animator({animation, setAnimation, setNotification}) {
         setNotification({show: true, message: "Animation Saved", dismissType: notificationDismissTypes.AUTO_DISMISS})
     }
 
+    function renderDeleteModal() {
+        if (showDeleteModal) {
+            return <Modal
+                message="Are you sure you want to delete this animation?"
+                handleResult={handleDeleteAnimation}
+            />
+        }
+    }
+
+    function handleShowDeleteModal() {
+        if (animation.id) {
+            setShowDeleteModal(true)
+        }
+    }
+
+    function handleDeleteAnimation(modalResult) {
+        if (modalResult.buttonClicked === modalButtonTypes.OK) {
+            deleteAnimation(animation.id)
+            setAnimation(MatrixAnimation.newBlankAnimation())
+            setNotification({
+                show: true,
+                message: "Animation Deleted",
+                dismissType: notificationDismissTypes.AUTO_DISMISS
+            })
+            // * show notification saying "Animation Deleted"
+        }
+        setShowDeleteModal(false)
+    }
+
+
     function handleAnimationSpeedChange(event) {
         const animationUpdate = {...animation}
         animationUpdate.speed = event.target.value
@@ -143,7 +175,7 @@ export default function Animator({animation, setAnimation, setNotification}) {
                     Save
                 </button>
                 <button className="delete-animation-button" data-testid="delete-animation-button"
-                        onClick={handleSaveAnimation}
+                        onClick={handleShowDeleteModal}
                         onMouseDown={addButtonPressedClass}
                         onMouseLeave={removeButtonPressedClass}
                         onMouseUp={removeButtonPressedClass}
@@ -176,8 +208,11 @@ export default function Animator({animation, setAnimation, setNotification}) {
                     }
                 />
             </label>
+            {renderDeleteModal()}
             <Timeline
                 frames={animation.frames}
+                frameHeight={animation.height}
+                frameWidth={animation.width}
                 handleTimelineGridSelection={handleTimelineGridSelection}
                 playPreview={playPreview}
                 handleSetPlayPreview={playAnimation}

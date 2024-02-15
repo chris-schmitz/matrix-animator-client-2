@@ -1,3 +1,6 @@
+import {AnimationFrame} from "./AnimationFrame";
+import {serialNumbers} from "../utilities/ListSerialNumberGenerator";
+
 export class MatrixAnimation {
     constructor(title, userId, height, width, speed, frames, id) {
         this.title = title
@@ -5,8 +8,12 @@ export class MatrixAnimation {
         this.height = height
         this.width = width
         this.speed = speed
-        this.frames = frames
+        this.frames = frames ? frames : [new AnimationFrame(serialNumbers.getSerialNumber(), Array(8 * 8).fill("#000000"))]
         this.id = id
+    }
+
+    static newBlankAnimation() {
+        return new MatrixAnimation("...", 0, 8, 8, 300, null)
     }
 
     static fromObject({title, userId, height, width, speed, frames, id} = animationData) {

@@ -34,17 +34,26 @@ export function clickSaveAnimationButton() {
     fireEvent.click(button)
 }
 
+export function clickDeleteAnimationButton() {
+    fireEvent.click(screen.getByTestId("delete-animation-button"))
+}
+
+export function clickModalOkButton() {
+    fireEvent.click(screen.getByTestId("modal-ok-button"))
+}
+
 
 export function expectPixelToHaveColor(gridIndex, expectedColor) {
     const pixelElement = screen.getAllByTestId("pixel")[gridIndex]
     expect(pixelElement).toHaveStyle({backgroundColor: expectedColor})
 }
 
-export function mockFetchSuccessfulResponse(content) {
+export async function mockFetchCall(returnContent, statusCode = 200) {
     global.fetch = jest.fn(() => {
         return Promise.resolve({
-            json: () => Promise.resolve(content),
-            text: () => Promise.resolve(content)
+            status: statusCode,
+            json: () => Promise.resolve(returnContent),
+            text: () => Promise.resolve(returnContent)
         })
     })
 }
@@ -60,6 +69,12 @@ export function buildAMatrixAnimationInstance(title) {
             new AnimationFrame(0, ["#FFFFFF"])
         ]
     )
+}
+
+export function confirmationModalVisible(expectedMessage) {
+    const modal = screen.getByTestId("modal-message")
+    expect(modal).toBeInTheDocument()
+    expect(modal).toHaveTextContent(expectedMessage)
 }
 
 export function noop() {

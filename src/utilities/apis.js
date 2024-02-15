@@ -42,9 +42,19 @@ export async function saveAnimation(animationRequestPayload) {
 
 export async function updateAnimation(animationRequestPayload) {
     const response = await makeApiRequest({
-        uri: api.baseUrl,
+        uri: api.baseUrl + `/${animationRequestPayload.id}`,
         method: httpMethods.PUT,
         body: JSON.stringify(animationRequestPayload)
     })
     return await response.text()
+}
+
+export async function deleteAnimation(animationId) {
+    const response = await makeApiRequest({
+        uri: api.baseUrl + `/${animationId}`,
+        method: httpMethods.DELETE
+    })
+    if (response.status.toString()[0] !== "2") {
+        throw new Error("There was an error when trying to delete the animation")
+    }
 }

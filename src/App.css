@@ -214,3 +214,44 @@ html, body {
 .notification.hidden {
     display: none;
 }
+
+.modal-background {
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    background: rgb(10, 10, 10, .8);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.modal {
+    background: white;
+    height: 200px;
+    width: 400px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+    align-items: center;
+}
+
+.modal-buttons {
+    width: 100%;
+    display: flex;
+    justify-content: space-around;
+}
+
+.modal-button {
+    width: 80px;
+}
+
+.modal-button.ok {
+    background: green;
+    color: lightgreen;
+    border: 1px solid lightgreen;
+}
+
+.modal-button.cancel {
+}

@@ -4,7 +4,7 @@
 //     toString: jest.fn()
 // }
 
-import {clickSaveAnimationButton, mockFetchSuccessfulResponse} from "./test_helpers/testHelpers";
+import {clickSaveAnimationButton, mockFetchCall} from "./test_helpers/testHelpers";
 import {render, screen, waitFor, waitForElementToBeRemoved} from "@testing-library/react";
 import App from "../App";
 
@@ -16,7 +16,7 @@ function setUrl(url) {
 
 describe("App", () => {
     it("displays a notification when an animation is saved", async () => {
-        mockFetchSuccessfulResponse(123)
+        mockFetchCall(123)
 
         render(<App/>)
 
