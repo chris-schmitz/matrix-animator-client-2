@@ -1,5 +1,5 @@
-import Animator from "../../layouts/Animator";
-import {fireEvent, render, screen, waitFor} from "@testing-library/react";
+import Animator from "../../layouts/Animator"
+import { fireEvent, render, screen, waitFor } from "@testing-library/react"
 import {
     buildAMatrixAnimationInstance,
     clickDeleteAnimationButton,
@@ -10,9 +10,12 @@ import {
     mockFetchCall,
     noop,
     setActivePalettePicker,
-    setPaletteColor
-} from "../test_helpers/testHelpers";
-import {notificationDismissTypes} from "../../App";
+    setPaletteColor,
+    clickDeleteFrameButton,
+    clickModalOkButton
+} from "../test_helpers/testHelpers"
+import { notificationDismissTypes } from "../../App"
+import { MatrixAnimation } from "../../domain/MatrixAnimation"
 
 
 // TODO: add in a helper method to make a default animation instance and pop that into each of the tests
@@ -20,9 +23,31 @@ import {notificationDismissTypes} from "../../App";
 
 describe("Animator", () => {
 
+    describe("action buttons", () => {
+        it("can delete an animation frame", async () => {
+            render(<Animator
+                animation={MatrixAnimation.newBlankAnimation()}
+                setAnimation={noop}
+                setNotification={noop}
+            />)
+
+            clickPixel(0)
+
+            expect(screen.getAllByTestId("pixel")[0]).toHaveStyle("background: #FF00FF")
+
+            clickDeleteFrameButton()
+
+            expect(screen.getByTestId("modal")).toBeInTheDocument()
+
+            clickModalOkButton()
+
+            expect(screen.getAllByTestId("pixel")[0]).toHaveStyle("background: #000000")
+        })
+    })
+
     test("can set an active color in the first palette and use it to color pixels", async () => {
         const targetColor = "#000000"
-        render(<Animator animation={buildAMatrixAnimationInstance()} setAnimation={noop} setNotification={noop}/>)
+        render(<Animator animation={buildAMatrixAnimationInstance()} setAnimation={noop} setNotification={noop} />)
         await setPaletteColor(targetColor, 0)
 
         await clickPixel(0)
@@ -33,7 +58,7 @@ describe("Animator", () => {
     test("can use different colors in the palette color pickers", async () => {
         const targetColor = "#CF10A3"
 
-        render(<Animator animation={buildAMatrixAnimationInstance()} setAnimation={noop} setNotification={noop}/>)
+        render(<Animator animation={buildAMatrixAnimationInstance()} setAnimation={noop} setNotification={noop} />)
         await setPaletteColor(targetColor, 2)
         await setActivePalettePicker(2)
 
@@ -53,7 +78,7 @@ describe("Animator", () => {
         mockFetchCall(123)
         const animation = buildAMatrixAnimationInstance()
         const notificationMock = jest.fn()
-        render(<Animator animation={animation} setAnimation={noop} setNotification={notificationMock}/>)
+        render(<Animator animation={animation} setAnimation={noop} setNotification={notificationMock} />)
         await clickSaveAnimationButton()
 
         expect(fetch).toHaveBeenCalledWith(
@@ -80,13 +105,13 @@ describe("Animator", () => {
         const animation = buildAMatrixAnimationInstance()
         animation.id = 555
         const notificationMock = jest.fn()
-        render(<Animator animation={animation} setAnimation={noop} setNotification={notificationMock}/>)
+        render(<Animator animation={animation} setAnimation={noop} setNotification={notificationMock} />)
         await clickPixel(0)
         await clickDeleteAnimationButton()
 
-        await waitFor(async () => {
-            await confirmationModalVisible("Are you sure you want to delete this animation?")
-        })
+        confirmationModalVisible("Are you sure you want to delete this animation?")
+
+        clickModalOkButton()
 
         expect(fetch).toHaveBeenCalledWith(
             `http://localhost:8080/rest/animations/${animation.id}`,
@@ -110,14 +135,13 @@ describe("Animator", () => {
         const animation = buildAMatrixAnimationInstance()
         animation.id = 123
         const notificationMock = jest.fn()
-        render(<Animator animation={animation} setAnimation={noop} setNotification={notificationMock}/>)
+        render(<Animator animation={animation} setAnimation={noop} setNotification={notificationMock} />)
 
-        await clickSaveAnimationButton()
+        clickSaveAnimationButton()
 
-        await clickSaveAnimationButton()
 
         expect(fetch).toHaveBeenCalledWith(
-            "http://localhost:8080/rest/animations",
+            `http://localhost:8080/rest/animations/${animation.id}`,
             {
                 "method": "PUT",
                 headers: {
@@ -133,4 +157,5 @@ describe("Animator", () => {
             })
         })
     })
+
 })

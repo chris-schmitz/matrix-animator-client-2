@@ -1,14 +1,14 @@
-import ModalButtonTypes from "../../domain/ModalButtonTypes";
+import ModalButtonTypes from "../../domain/ModalButtonTypes"
 
-export default function Modal({message, handleResult}) {
+export default function Modal({ message, handleResult }) {
 
     function handleOkClick(clickedButtonType) {
-        handleResult({buttonClicked: clickedButtonType})
+        handleResult({ buttonClicked: clickedButtonType })
     }
 
     return <div className="modal-background" data-testid="modal">
         <div className="modal">
-            <p className="modal-message">{message}</p>
+            <p data-testid="modal-message" className="modal-message">{message}</p>
             <div className="modal-buttons">
                 <button
                     className="modal-button ok"

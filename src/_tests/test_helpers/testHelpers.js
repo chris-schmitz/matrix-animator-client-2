@@ -1,14 +1,14 @@
 //  TODO: move these helpers out to a test utility module
-import {fireEvent, screen} from "@testing-library/react";
-import {userEvent} from "@testing-library/user-event";
-import {MatrixAnimation} from "../../domain/MatrixAnimation";
-import {AnimationFrame} from "../../domain/AnimationFrame";
+import { fireEvent, screen } from "@testing-library/react"
+import { userEvent } from "@testing-library/user-event"
+import { MatrixAnimation } from "../../domain/MatrixAnimation"
+import { AnimationFrame } from "../../domain/AnimationFrame"
 
 const user = userEvent.setup()
 
 export function setPaletteColor(color, palettePickerNumber) {
     const palette = screen.getAllByTestId("color-picker")[palettePickerNumber]
-    fireEvent.change(palette, {target: {value: color}})
+    fireEvent.change(palette, { target: { value: color } })
 }
 
 export async function setActivePalettePicker(pickerIndex) {
@@ -29,9 +29,12 @@ export function clickNewFrameButton() {
     fireEvent.click(button)
 }
 
+export function clickDeleteFrameButton() {
+    fireEvent.click(screen.getByTestId("delete-frame-button"))
+}
+
 export function clickSaveAnimationButton() {
-    const button = screen.getByTestId("save-animation-button")
-    fireEvent.click(button)
+    fireEvent.click(screen.getByTestId("save-animation-button"))
 }
 
 export function clickDeleteAnimationButton() {
@@ -45,7 +48,7 @@ export function clickModalOkButton() {
 
 export function expectPixelToHaveColor(gridIndex, expectedColor) {
     const pixelElement = screen.getAllByTestId("pixel")[gridIndex]
-    expect(pixelElement).toHaveStyle({backgroundColor: expectedColor})
+    expect(pixelElement).toHaveStyle({ backgroundColor: expectedColor })
 }
 
 export async function mockFetchCall(returnContent, statusCode = 200) {

@@ -1,7 +1,7 @@
-import './App.css';
-import Animator from "./layouts/Animator";
-import {useState} from "react";
-import {MatrixAnimation} from "./domain/MatrixAnimation";
+import './App.css'
+import Animator from "./layouts/Animator"
+import { useState } from "react"
+import { MatrixAnimation } from "./domain/MatrixAnimation"
 
 export const notificationDismissTypes = {
     AUTO_DISMISS: "auto-dismiss",
@@ -19,7 +19,8 @@ function App() {
 
 
     function getActiveLayout() {
-        switch (activeLayout) {
+        switch (activeLayout)
+        {
             case Layouts.ANIMATOR:
                 return <Animator
                     animation={animation}
@@ -33,10 +34,12 @@ function App() {
     }
 
     function renderNotification() {
-        if (notification.show) {
-            if (notification.dismissType == notificationDismissTypes.AUTO_DISMISS) {
+        if (notification.show)
+        {
+            if (notification.dismissType == notificationDismissTypes.AUTO_DISMISS)
+            {
                 setTimeout(() => {
-                    setNotification({show: false, message: null, dismissType: notificationDismissTypes.AUTO_DISMISS})
+                    setNotification({ show: false, message: null, dismissType: notificationDismissTypes.AUTO_DISMISS })
                 }, 3000)
                 return <div className="notification" data-testid="notification">{notification.message}</div>
             }
@@ -48,11 +51,11 @@ function App() {
             {renderNotification()}
             {getActiveLayout()}
         </div>
-    );
+    )
 }
 
 
-export default App;
+export default App
 
 export const Layouts = {
     ANIMATION_LIST: "animation_list",

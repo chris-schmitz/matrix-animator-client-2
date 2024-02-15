@@ -4,9 +4,9 @@
 //     toString: jest.fn()
 // }
 
-import {clickSaveAnimationButton, mockFetchCall} from "./test_helpers/testHelpers";
-import {render, screen, waitFor, waitForElementToBeRemoved} from "@testing-library/react";
-import App from "../App";
+import { clickSaveAnimationButton, mockFetchCall } from "./test_helpers/testHelpers"
+import { render, screen, waitFor, waitForElementToBeRemoved } from "@testing-library/react"
+import App from "../App"
 
 function setUrl(url) {
     global.URL = {
@@ -18,17 +18,17 @@ describe("App", () => {
     it("displays a notification when an animation is saved", async () => {
         mockFetchCall(123)
 
-        render(<App/>)
+        render(<App />)
 
         expect(screen.queryByTestId("notification")).not.toBeInTheDocument()
         clickSaveAnimationButton()
 
         // ! WHY IS THE TIMING ON THIS NOT WORKING NOW?!?!?!??!
         await waitFor(async () => {
-            expect(screen.queryByTestId("notification")).toHaveTextContent("Animation Saved")
+            expect(screen.getByTestId("notification")).toHaveTextContent("Animation Saved")
             await waitForElementToBeRemoved(
                 () => screen.queryByTestId("notification"),
-                {timeout: 10000, interval: 1000}
+                { timeout: 10000, interval: 1000 }
             )
             expect(screen.queryByTestId("notification")).not.toBeInTheDocument()
         })

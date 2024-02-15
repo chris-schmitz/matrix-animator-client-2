@@ -209,6 +209,8 @@ html, body {
     display: flex;
     align-items: center;
     justify-content: center;
+    background:white;
+    filter: drop-shadow(2px 2px 2px darkcyan);
 }
 
 .notification.hidden {
