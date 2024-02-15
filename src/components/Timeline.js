@@ -3,6 +3,8 @@ import {addButtonPressedClass, removeButtonPressedClass} from "../utilities/mous
 
 export default function Timeline({
                                      frames,
+                                     frameHeight,
+                                     frameWidth,
                                      handleTimelineGridSelection,
                                      activeFrameIndex,
                                      playPreview,
@@ -21,30 +23,31 @@ export default function Timeline({
             >
                 ⏯
             </button>
-            <div class="timeline-frame-wrapper">
+            <div className="timeline-frame-wrapper">
                 {renderFrames(frames, handleTimelineGridSelection, activeFrameIndex)}
             </div>
         </div>
     )
-}
 
-function renderFrames(frames, handleTimelineGridSelection, activeFrameIndex) {
-    return frames.map((frame, index) => {
-        return <div
-            key={frame.id}
-            className={activeFrameIndex === index ? "active-frame" : ""}
-            onClick={() => handleTimelineGridSelection(index)}
-        >
-            <Grid
-                height={frame.height}
-                width={frame.width}
-                gridColors={frame.gridColors}
-                handlePixelClick={() => {
-                }}
-                handleSetPaintPixels={() => {
-                }}
-                tinyGrid={true}
-            />
-        </div>
-    })
+    // TODO: add some test coverage
+    function renderFrames(frames, handleTimelineGridSelection, activeFrameIndex) {
+        return frames.map((frame, index) => {
+            return <div
+                key={frame.id}
+                className={activeFrameIndex === index ? "active-frame grid-tiny-wrapper" : "grid-tiny-wrapper"}
+                onClick={() => handleTimelineGridSelection(index)}
+            >
+                <Grid
+                    height={frameHeight}
+                    width={frameWidth}
+                    gridColors={frame.gridColors}
+                    handlePixelClick={() => {
+                    }}
+                    handleSetPaintPixels={() => {
+                    }}
+                    tinyGrid={true}
+                />
+            </div>
+        })
+    }
 }

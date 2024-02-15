@@ -24,19 +24,23 @@ html, body {
     display: flex;
     column-gap: 10px;
     align-items: center;
-    padding: 10px;
-    overflow-y: auto;
+    /*padding: 10px;*/
+    /*overflow-y: auto;*/
 }
 
 
 .timeline-frame-wrapper {
+    flex: 1;
     display: flex;
     overflow-x: scroll;
+    overflow-y: hidden;
+    gap: 10px;
+    padding-bottom: 5px;
 }
 
 .timeline-frame-wrapper .grid {
-    margin-right: 10px;
-    width: 90px;
+    /*margin-right: 10px;*/
+    /*width: 90px;*/
 }
 
 .work-area {
@@ -62,15 +66,18 @@ html, body {
     justify-content: center;
 }
 
+.grid-tiny-wrapper {
+    flex-shrink: 0;
+}
 
 .grid.tiny {
-    filter: drop-shadow(5px 5px 5px darkcyan);
+    /*filter: drop-shadow(5px 5px 5px darkcyan);*/
     /*background: coral;*/
 }
 
 .grid.tiny .pixel {
-    height: 10px;
-    width: 10px;
+    height: 6px;
+    width: 6px;
 }
 
 .pixel {
@@ -102,9 +109,6 @@ html, body {
 
 .active-frame {
     border-bottom: 3px solid magenta;
-    padding-bottom: 8px;
-    /*drop-shadow: none;*/
-    /*border*/
 }
 
 .frame-actions {
@@ -167,4 +171,89 @@ html, body {
 
 .pressed {
     background: #014949 !important;
+}
+
+
+.nav-and-crud button {
+    font-size: 10px;
+    border: 0;
+    background: none;
+    color: darkcyan;
+    text-decoration: underline darkcyan;
+}
+
+.nav-and-crud span {
+    color: darkcyan;
+}
+
+.delete-animation-button {
+    color: red !important;
+    text-decoration: underline red !important;
+}
+
+.list-view-nav-button {
+}
+
+.save-animation-button {
+}
+
+.notification {
+    position: absolute;
+    top: 0;
+    right: 0;
+    border: 2px solid darkcyan;
+    height: 50px;
+    width: 150px;
+    padding: 5px;
+    margin: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background:white;
+    filter: drop-shadow(2px 2px 2px darkcyan);
+}
+
+.notification.hidden {
+    display: none;
+}
+
+.modal-background {
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    background: rgb(10, 10, 10, .8);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.modal {
+    background: white;
+    height: 200px;
+    width: 400px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+    align-items: center;
+}
+
+.modal-buttons {
+    width: 100%;
+    display: flex;
+    justify-content: space-around;
+}
+
+.modal-button {
+    width: 80px;
+}
+
+.modal-button.ok {
+    background: green;
+    color: lightgreen;
+    border: 1px solid lightgreen;
+}
+
+.modal-button.cancel {
 }
