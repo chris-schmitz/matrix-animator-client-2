@@ -1,5 +1,5 @@
-import {AnimationFrame} from "./AnimationFrame";
-import {serialNumbers} from "../utilities/ListSerialNumberGenerator";
+import { AnimationFrame } from "./AnimationFrame"
+import { serialNumbers } from "../utilities/ListSerialNumberGenerator"
 
 export class MatrixAnimation {
     constructor(title, userId, height, width, speed, frames, id) {
@@ -16,7 +16,13 @@ export class MatrixAnimation {
         return new MatrixAnimation("...", 0, 8, 8, 300, null)
     }
 
-    static fromObject({title, userId, height, width, speed, frames, id} = animationData) {
+
+    static fromApiResponse({ title, userId, height, width, speed, frames, id } = animationData) {
+        const f = frames.map((frame, i) => new AnimationFrame(i, frame.pixels.map(c => `#${c.toString(16)}`)))
+        return new MatrixAnimation(title, userId, height, width, speed, f, id)
+    }
+
+    static fromObject({ title, userId, height, width, speed, frames, id } = animationData) {
         return new MatrixAnimation(title, userId, height, width, speed, frames, id)
     }
 
@@ -29,7 +35,7 @@ export class MatrixAnimation {
         const frames = this.frames
             .map(frame => frame.gridColors)
             .map(gridColors => gridColors.map(stringHex => parseInt(stringHex.slice(1), 16)))
-            .map((gridColors, i) => ({positionInAnimation: i, pixels: gridColors}))
-        return {...this, frames}
+            .map((gridColors, i) => ({ positionInAnimation: i, pixels: gridColors }))
+        return { ...this, frames }
     }
 }

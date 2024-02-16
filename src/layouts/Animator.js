@@ -1,24 +1,40 @@
 import { AnimationFrame } from "../domain/AnimationFrame"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import WorkArea from "../components/WorkArea"
 import Timeline from "../components/Timeline"
 import { serialNumbers } from "../utilities/ListSerialNumberGenerator"
-import { deleteAnimation, saveAnimation, updateAnimation } from "../utilities/apis"
+import { deleteAnimation, getAnimation, saveAnimation, updateAnimation } from "../utilities/apis"
 import { addButtonPressedClass, removeButtonPressedClass } from "../utilities/mouseUtilities"
 import { notificationDismissTypes } from "../App"
 import { MatrixAnimation } from "../domain/MatrixAnimation"
 import Modal from "../_tests/components/Modal"
 import modalButtonTypes from "../domain/ModalButtonTypes"
 import ModalButtonTypes from "../domain/ModalButtonTypes"
+import { Link, useLoaderData } from "react-router-dom"
+
+export async function loader({ params }) {
+    const animation = await getAnimation(params.id)
+
+    const a = MatrixAnimation.fromApiResponse(animation)
+    return a
+}
 
 
+export default function Animator({ setNotification }) {
 
-export default function Animator({ animation, setAnimation, setNotification }) {
-
+    const [animation, setAnimation] = useState(MatrixAnimation.newBlankAnimation())
     const [activeFrameIndex, setActiveFrameIndex] = useState(0)
     const [playPreview, setPlayPreview] = useState(false)
     // TODO: consider compacting these booleans into a common object or something
     const [activeModalType, setActiveModalType] = useState({ type: null, show: false })
+
+    const loadedAnimation = useLoaderData()
+    useEffect(() => {
+        if (loadedAnimation)
+        {
+            setAnimation(loadedAnimation)
+        }
+    }, [loadedAnimation])
 
     // * right now we're hard coding to 8 by 8 b/c that's the size
     // * of all of my physical matrices at the moment, but eventually
@@ -223,6 +239,7 @@ export default function Animator({ animation, setAnimation, setNotification }) {
                  * if we're having to do this to every button to handle the classes
                  * then we should make it a first class component
                   */}
+                {/**
                 <button className="list-view-nav-button" data-testid="list-view-nav-button"
                     onClick={handleSaveAnimation}
                     onMouseDown={addButtonPressedClass}
@@ -231,6 +248,8 @@ export default function Animator({ animation, setAnimation, setNotification }) {
                 >
                     List View
                 </button>
+                 */}
+                <Link to="/">List View</Link>
                 <span>|</span>
                 <button className="save-animation-button" data-testid="save-animation-button"
                     onClick={handleSaveAnimation}

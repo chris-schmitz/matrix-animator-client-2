@@ -1,16 +1,18 @@
 import './App.css'
-import Animator from "./layouts/Animator"
+import Animator, { loader as animationLoader } from "./layouts/Animator"
 import { useState } from "react"
 import { MatrixAnimation } from "./domain/MatrixAnimation"
+import { createBrowserRouter, RouterProvider } from "react-router-dom"
+import ErrorPage from './_tests/layouts/Error'
+import AnimationsList, { loader as animationListLoader } from './layouts/AnimationsList'
 
 export const notificationDismissTypes = {
     AUTO_DISMISS: "auto-dismiss",
     USER_DISMISS: "user-dismiss"
 }
 
+
 function App() {
-    const [activeLayout, setActiveLayout] = useState(Layouts.ANIMATOR)
-    const [animation, setAnimation] = useState(MatrixAnimation.newBlankAnimation())
     const [notification, setNotification] = useState({
         show: false,
         message: null,
@@ -18,20 +20,6 @@ function App() {
     })
 
 
-    function getActiveLayout() {
-        switch (activeLayout)
-        {
-            case Layouts.ANIMATOR:
-                return <Animator
-                    animation={animation}
-                    setAnimation={setAnimation}
-                    setNotification={setNotification}
-                />
-            case Layouts.ANIMATION_LIST:
-                return <h1>Animation List</h1>
-
-        }
-    }
 
     function renderNotification() {
         if (notification.show)
@@ -46,10 +34,32 @@ function App() {
         }
     }
 
+    const router = createBrowserRouter([
+        {
+            path: "/",
+            element: <AnimationsList />,
+            errorElement: <ErrorPage />,
+            loader: animationListLoader
+        },
+        {
+            path: "/animation",
+            element: <Animator
+                setNotification={setNotification}
+            />
+        },
+        {
+            path: "/animation/:id",
+            element: <Animator
+                setNotification={setNotification}
+            />,
+            loader: animationLoader
+        }
+    ])
+
     return (
         <div id="app-root" className="App">
             {renderNotification()}
-            {getActiveLayout()}
+            <RouterProvider router={router} />
         </div>
     )
 }
