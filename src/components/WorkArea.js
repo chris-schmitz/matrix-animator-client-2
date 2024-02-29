@@ -113,6 +113,9 @@ export default function WorkArea({
                     handleSetPaintPixels={handleSetPaintPixels}
                     handlePixelClick={handlePixelClick}
                 />
+                <div style={{display: "flex", flexWrap: "wrap", flexDirection: "column", height: "500px"}}>
+                    {animationFrame.gridColors.map(((c, i) => <div key={i}>{c}</div>))}
+                </div>
             </div>
             <div className="color-palette" data-testid="palette">
                 {renderPaletteButtonGroups()}

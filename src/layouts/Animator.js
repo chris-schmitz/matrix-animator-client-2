@@ -1,18 +1,18 @@
-import { AnimationFrame } from "../domain/AnimationFrame"
-import { useEffect, useState } from "react"
+import {AnimationFrame} from "../domain/AnimationFrame"
+import {useEffect, useState} from "react"
 import WorkArea from "../components/WorkArea"
 import Timeline from "../components/Timeline"
-import { serialNumbers } from "../utilities/ListSerialNumberGenerator"
-import { deleteAnimation, getAnimation, saveAnimation, updateAnimation } from "../utilities/apis"
-import { addButtonPressedClass, removeButtonPressedClass } from "../utilities/mouseUtilities"
-import { notificationDismissTypes } from "../App"
-import { MatrixAnimation } from "../domain/MatrixAnimation"
+import {serialNumbers} from "../utilities/ListSerialNumberGenerator"
+import {deleteAnimation, getAnimation, saveAnimation, updateAnimation} from "../utilities/apis"
+import {addButtonPressedClass, removeButtonPressedClass} from "../utilities/mouseUtilities"
+import {notificationDismissTypes} from "../App"
+import {MatrixAnimation} from "../domain/MatrixAnimation"
 import Modal from "../_tests/components/Modal"
 import modalButtonTypes from "../domain/ModalButtonTypes"
 import ModalButtonTypes from "../domain/ModalButtonTypes"
-import { Link, useLoaderData } from "react-router-dom"
+import {Link, useLoaderData, useNavigate} from "react-router-dom"
 
-export async function loader({ params }) {
+export async function loader({params}) {
     const animation = await getAnimation(params.id)
 
     const a = MatrixAnimation.fromApiResponse(animation)
@@ -20,18 +20,19 @@ export async function loader({ params }) {
 }
 
 
-export default function Animator({ setNotification }) {
+export default function Animator({setNotification}) {
 
     const [animation, setAnimation] = useState(MatrixAnimation.newBlankAnimation())
     const [activeFrameIndex, setActiveFrameIndex] = useState(0)
     const [playPreview, setPlayPreview] = useState(false)
     // TODO: consider compacting these booleans into a common object or something
-    const [activeModalType, setActiveModalType] = useState({ type: null, show: false })
+    const [activeModalType, setActiveModalType] = useState({type: null, show: false})
+
+    const navigate = useNavigate()
 
     const loadedAnimation = useLoaderData()
     useEffect(() => {
-        if (loadedAnimation)
-        {
+        if (loadedAnimation) {
             setAnimation(loadedAnimation)
         }
     }, [loadedAnimation])
@@ -46,7 +47,7 @@ export default function Animator({ setNotification }) {
     }
 
     function handleNewFrameRequest() {
-        const animationUpdate = { ...animation }
+        const animationUpdate = {...animation}
         const previousId = animationUpdate.frames[animationUpdate.frames.length - 1].id
         animationUpdate.frames.push(makeNewFrame(previousId + 1))
         setAnimation(animationUpdate)
@@ -54,38 +55,35 @@ export default function Animator({ setNotification }) {
     }
 
     function handleAnimationFrameUpdate(frameId, gridColors) {
-        const animationUpdate = { ...animation }
+        const animationUpdate = {...animation}
         const targetFrame = animationUpdate.frames.findIndex(frame => frame.id === frameId)
         animationUpdate.frames[targetFrame].gridColors = gridColors
         setAnimation(animationUpdate)
     }
 
     function handleDeleteAnimationFrame(modalResult) {
-        setActiveModalType({ type: ModalTypeData.NONE, show: false })
+        setActiveModalType({type: ModalTypeData.NONE, show: false})
         if (modalResult.buttonClicked !== ModalButtonTypes.OK) return
 
-        const animationUpdate = { ...animation }
+        const animationUpdate = {...animation}
 
         animationUpdate.frames.splice(activeFrameIndex, 1)
 
 
-        if (animationUpdate.frames.length === 0)
-        {
+        if (animationUpdate.frames.length === 0) {
             animationUpdate.frames.push(makeNewFrame(0))
             setActiveFrameIndex(0)
-        } else if (activeFrameIndex === 0)
-        {
+        } else if (activeFrameIndex === 0) {
             setActiveFrameIndex(0)
-        } else
-        {
+        } else {
             setActiveFrameIndex(activeFrameIndex - 1)
         }
         setAnimation(animationUpdate)
     }
 
     function handleDuplicateFrameRequest(frameId) {
-        const animationUpdate = { ...animation }
-        const duplicatedFrame = { ...animationUpdate.frames.find(frame => frame.id === frameId) }
+        const animationUpdate = {...animation}
+        const duplicatedFrame = {...animationUpdate.frames.find(frame => frame.id === frameId)}
         duplicatedFrame.id = serialNumbers.getSerialNumber()
         const targetIndex = animationUpdate.frames.findIndex(frame => frame.id === frameId)
         animationUpdate.frames.splice(targetIndex, 0, duplicatedFrame)
@@ -94,7 +92,7 @@ export default function Animator({ setNotification }) {
     }
 
     function handleSetAnimationTitle(event) {
-        const animationUpdate = { ...animation }
+        const animationUpdate = {...animation}
         animationUpdate.title = event.target.value
         setAnimation(animationUpdate)
     }
@@ -105,25 +103,20 @@ export default function Animator({ setNotification }) {
     }
 
 
-
     // ^ Animation playback =========================
     function playAnimation(play) {
-        if (play)
-        {
+        if (play) {
             let nextFrame = activeFrameIndex
             clearInterval(window.interval)
             window.interval = setInterval(() => {
-                if (nextFrame >= animation.frames.length - 1)
-                {
+                if (nextFrame >= animation.frames.length - 1) {
                     nextFrame = 0
-                } else
-                {
+                } else {
                     nextFrame = nextFrame + 1
                 }
                 setActiveFrameIndex(nextFrame)
             }, animation.speed)
-        } else
-        {
+        } else {
             clearInterval(window.interval)
         }
 
@@ -131,43 +124,35 @@ export default function Animator({ setNotification }) {
     }
 
     function handleAnimationSpeedChange(event) {
-        const animationUpdate = { ...animation }
+        const animationUpdate = {...animation}
         animationUpdate.speed = event.target.value
         setAnimation(animationUpdate)
     }
 
 
-
     // ^ API Crud ================================
     async function handleSaveAnimation() {
-        if (animation.id)
-        {
+        if (animation.id) {
             await updateAnimation(MatrixAnimation.fromObject(animation).toApiPayload())
-        } else
-        {
+        } else {
             const savedId = await saveAnimation(MatrixAnimation.fromObject(animation).toApiPayload())
-            const animationUpdate = { ...animation, id: savedId }
+            const animationUpdate = {...animation, id: savedId}
             setAnimation(animationUpdate)
         }
-        setNotification({ show: true, message: "Animation Saved", dismissType: notificationDismissTypes.AUTO_DISMISS })
+        setNotification({show: true, message: "Animation Saved", dismissType: notificationDismissTypes.AUTO_DISMISS})
     }
 
-    function handleDeleteAnimation(modalResult) {
-        if (modalResult.buttonClicked === modalButtonTypes.OK)
-        {
-            deleteAnimation(animation.id)
+    async function handleDeleteAnimation(modalResult) {
+        if (modalResult.buttonClicked === modalButtonTypes.OK) {
+            await deleteAnimation(animation.id)
             setAnimation(MatrixAnimation.newBlankAnimation())
-            setNotification({
-                show: true,
-                message: "Animation Deleted",
-                dismissType: notificationDismissTypes.AUTO_DISMISS
-            })
-            // * show notification saying "Animation Deleted"
+            // // * show notification saying "Animation Deleted"
         }
-        setActiveModalType({ type: null, show: false })
-        // setShowDeleteModal(false)
+        setActiveModalType({type: null, show: false})
+        // TODO: if you like the previousAction thing, put the value behind an enum
+        navigate("/")
+        // navigate("/", {state: {previousAction: 'delete'}})
     }
-
 
 
     // ^ Modal ==================================
@@ -203,8 +188,7 @@ export default function Animator({ setNotification }) {
     }
 
     function renderModal() {
-        if (!activeModalType.show)
-        {
+        if (!activeModalType.show) {
             return
         }
         const modalDetails = ModalTypeData.getModalData(activeModalType.type)
@@ -216,19 +200,16 @@ export default function Animator({ setNotification }) {
 
 
     function handleShowDeleteAnimationModal() {
-        if (animation.id)
-        {
+        if (animation.id) {
             // setShowDeleteModal(true)
-            setActiveModalType({ type: ModalTypeData.DELETE_ANIMATION, show: true })
+            setActiveModalType({type: ModalTypeData.DELETE_ANIMATION, show: true})
         }
     }
 
     function handleShowDeleteFrameModal() {
-        setActiveModalType({ type: ModalTypeData.DELETE_FRAME, show: true })
+        setActiveModalType({type: ModalTypeData.DELETE_FRAME, show: true})
 
     }
-
-
 
 
     return (
@@ -240,30 +221,30 @@ export default function Animator({ setNotification }) {
                  * then we should make it a first class component
                   */}
                 {/**
-                <button className="list-view-nav-button" data-testid="list-view-nav-button"
-                    onClick={handleSaveAnimation}
-                    onMouseDown={addButtonPressedClass}
-                    onMouseLeave={removeButtonPressedClass}
-                    onMouseUp={removeButtonPressedClass}
-                >
-                    List View
-                </button>
+                 <button className="list-view-nav-button" data-testid="list-view-nav-button"
+                 onClick={handleSaveAnimation}
+                 onMouseDown={addButtonPressedClass}
+                 onMouseLeave={removeButtonPressedClass}
+                 onMouseUp={removeButtonPressedClass}
+                 >
+                 List View
+                 </button>
                  */}
                 <Link to="/">List View</Link>
                 <span>|</span>
                 <button className="save-animation-button" data-testid="save-animation-button"
-                    onClick={handleSaveAnimation}
-                    onMouseDown={addButtonPressedClass}
-                    onMouseLeave={removeButtonPressedClass}
-                    onMouseUp={removeButtonPressedClass}
+                        onClick={handleSaveAnimation}
+                        onMouseDown={addButtonPressedClass}
+                        onMouseLeave={removeButtonPressedClass}
+                        onMouseUp={removeButtonPressedClass}
                 >
                     Save
                 </button>
                 <button className="delete-animation-button" data-testid="delete-animation-button"
-                    onClick={handleShowDeleteAnimationModal}
-                    onMouseDown={addButtonPressedClass}
-                    onMouseLeave={removeButtonPressedClass}
-                    onMouseUp={removeButtonPressedClass}
+                        onClick={handleShowDeleteAnimationModal}
+                        onMouseDown={addButtonPressedClass}
+                        onMouseLeave={removeButtonPressedClass}
+                        onMouseUp={removeButtonPressedClass}
                 >
                     Delete
                 </button>
